@@ -1,6 +1,6 @@
 import { Box, Image, VStack, Text, Link, Heading } from "@gluestack-ui/themed";
 
-export default function CardInfo () {
+export default function CardInfo ({ imageUri }) {
     return (   
         <Box
             maxWidth='$64'
@@ -26,7 +26,8 @@ export default function CardInfo () {
                 <Image
                     h={150}
                     source={{
-                        uri: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=70',
+                        // uri: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=70',
+                        uri: imageUri,
                     }}
                     alt="picture"
                 />

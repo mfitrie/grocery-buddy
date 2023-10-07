@@ -3,7 +3,7 @@ import messageReducer from './message'
 
 export const store = configureStore({
   reducer: {
-    messageReducer,
+    message: messageReducer,
   },
 })
 
