@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { AnimeImage } from "../data/AnimeImage";
 // import { RAPID_API_KEY } from '@env';
 
 // const rapidApiKey = RAPID_API_KEY;
 
 const useFetch = () => {
-    const [data, setData] = useState<AnimeImage>(null);
+    const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
