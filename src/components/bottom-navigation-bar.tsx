@@ -1,19 +1,20 @@
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { HomePage } from "../views/HomePage";
-import { CollectionsPage } from "../views/Collections/CollectionsPage";
-import { ListGroceriesToday } from "../views/ListGroceriesToday";
+import { ListGroceriesToday } from "../views/Cart/ListGroceriesToday";
 import { Ionicons } from "@expo/vector-icons"
+import CollectionStackScreen from '../views/Collections/CollectionStackScreen';
+import HomeStackScreen from '../views/Home/HomeStackScreen';
+import CartStackScreen from '../views/Cart/CartStackScreen';
 
 const Tab = createMaterialBottomTabNavigator();
 
 export function BottomNavigationBar(){
     return (
         <Tab.Navigator 
-            initialRouteName="HomePage"
+            initialRouteName="Home"
         >
             <Tab.Screen 
-                name="HomePage" 
-                component={ HomePage }
+                name="Home" 
+                component={ HomeStackScreen }
                 options={{
                     title: "Home",
                     tabBarIcon: ({ color }) => (
@@ -22,8 +23,8 @@ export function BottomNavigationBar(){
                 }}
             />
             <Tab.Screen 
-                name="Groceries" 
-                component={ ListGroceriesToday }
+                name="Cart" 
+                component={ CartStackScreen }
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Ionicons name="cart-outline" size={ 30 } color={ color }/>
@@ -32,7 +33,7 @@ export function BottomNavigationBar(){
             />
             <Tab.Screen 
                 name="Collection" 
-                component={ CollectionsPage }
+                component={ CollectionStackScreen }
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Ionicons name="albums-outline" size={ 30 } color={ color }/>

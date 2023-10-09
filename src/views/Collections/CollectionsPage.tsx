@@ -1,7 +1,7 @@
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text, Box } from "@gluestack-ui/themed";
+import { Text, Box, Button, ButtonText } from "@gluestack-ui/themed";
 
-export function CollectionsPage(){
+export function CollectionsPage({ navigation }){
     const insets = useSafeAreaInsets();
     return (
         <Box
@@ -13,6 +13,9 @@ export function CollectionsPage(){
             }}
         >
             <Text>Collections Page</Text>
+            <Button onPress={() => navigation.push("CollectionItem")}>
+                <ButtonText>Move to Collection Item</ButtonText>
+            </Button>
         </Box>
     )
 }

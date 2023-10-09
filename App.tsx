@@ -23,15 +23,12 @@ import useFetch from "./src/hooks/useFetch";
 import { useState } from "react";
 import { HeaderPage } from "./src/components/header-page";
 import { BottomNavigationBar } from "./src/components/bottom-navigation-bar";
-import { HomePage } from "./src/views/HomePage";
+import { HomePage } from "./src/views/Home/HomePage";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CollectionsPage } from "./src/views/Collections/CollectionsPage";
-import { ListGroceriesToday } from "./src/views/ListGroceriesToday";
+import { ListGroceriesToday } from "./src/views/Cart/ListGroceriesToday";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-
-const Stack = createNativeStackNavigator();
 
 export default function App() {
 
