@@ -1,7 +1,7 @@
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text, Box } from "@gluestack-ui/themed";
 
-export function ListGroceriesToday(){
+export function CollectionsPage(){
     const insets = useSafeAreaInsets();
     return (
         <Box
@@ -12,7 +12,7 @@ export function ListGroceriesToday(){
                 paddingBottom: insets.bottom,
             }}
         >
-            <Text>List Groceries Today</Text>
+            <Text>Collections Page</Text>
         </Box>
     )
 }

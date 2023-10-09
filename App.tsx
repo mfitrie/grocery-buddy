@@ -26,6 +26,9 @@ import { BottomNavigationBar } from "./src/components/bottom-navigation-bar";
 import { HomePage } from "./src/views/HomePage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { CollectionsPage } from "./src/views/Collections/CollectionsPage";
+import { ListGroceriesToday } from "./src/views/ListGroceriesToday";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
 const Stack = createNativeStackNavigator();
@@ -33,18 +36,14 @@ const Stack = createNativeStackNavigator();
 export default function App() {
 
   return (
-    <NavigationContainer>
-      <Provider store={ store }>
-        <GluestackUIProvider config={config.theme}>
-          <Stack.Navigator initialRouteName="Home">
-              <Stack.Screen
-                name="Home" 
-                component={ HomePage }
-              />
-          </Stack.Navigator>
-          <BottomNavigationBar />
-        </GluestackUIProvider>
-      </Provider>
-    </NavigationContainer>
+    <Provider store={ store }>
+      <GluestackUIProvider config={config.theme}>
+        <SafeAreaProvider>
+            <NavigationContainer>
+              <BottomNavigationBar />
+            </NavigationContainer>
+        </SafeAreaProvider>
+      </GluestackUIProvider>
+    </Provider>
   )
 }
