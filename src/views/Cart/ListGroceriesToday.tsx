@@ -7,13 +7,24 @@ import { useState } from 'react';
 
 export function ListGroceriesToday(){
     const [quantity, setQuantity] = useState(0);
+    const [isCheck, setCheck] = useState(false);
     const insets = useSafeAreaInsets();
 
     const addQuantity = () => {
         setQuantity(prevValue => prevValue + 1);
     } 
     const minusQuantity = () => {
-        setQuantity(prevValue => prevValue - 1);
+        setQuantity(prevValue => {
+            if(prevValue <= 0){
+                return 0;
+            }
+
+            return prevValue - 1;
+        });
+    }
+
+    const checkHandler = () => {
+        setCheck(prevValue => prevValue = !prevValue);
     }
 
     return (
@@ -95,7 +106,8 @@ export function ListGroceriesToday(){
                 >
                     <Checkbox
                        size="md"
-                       status='checked'
+                       status={ isCheck ? "checked" : "unchecked" }
+                       onPress={ checkHandler }
                        color='#2ecc71'
                     ></Checkbox>
                 </VStack>
