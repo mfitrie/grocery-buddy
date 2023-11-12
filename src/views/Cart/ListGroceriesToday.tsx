@@ -1,6 +1,30 @@
 import { faker } from '@faker-js/faker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text, Box, ScrollView, HStack, Image, VStack, Button, ButtonText, Heading, ButtonIcon, Pressable } from "@gluestack-ui/themed";
+import {
+    useToast,
+    Toast,
+    Modal,
+    ModalBackdrop,
+    ModalHeader, 
+    ModalBody,
+    ModalFooter,
+    Text, 
+    Box, 
+    ScrollView, 
+    HStack, 
+    Image, 
+    VStack, 
+    Button, 
+    ButtonText, 
+    Heading, 
+    ButtonIcon, 
+    Pressable, 
+    ModalContent,
+    Input,
+    InputField,
+    ToastTitle,
+    ToastDescription, 
+} from "@gluestack-ui/themed";
 import { Checkbox } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native';
 import { useState } from 'react';
@@ -70,6 +94,14 @@ export function ListGroceriesToday(){
         })));
     }
 
+    // modal
+    const [showModal, setShowModal] = useState<boolean>(false);
+    // modal
+
+    // toast
+    const toast = useToast();
+    // toast
+
     const insets = useSafeAreaInsets();
 
 
@@ -77,6 +109,96 @@ export function ListGroceriesToday(){
         <VStack
             h="$full"
         >
+            {/* modal */}
+            <Modal
+                isOpen={showModal}
+                onClose={() => {
+                    setShowModal(false);
+                }}
+            >
+                <ModalBackdrop />
+                <ModalContent>
+                    <ModalHeader>
+                        <VStack space="sm">
+                            <Heading size="lg">Item information</Heading>
+                        </VStack>
+                    </ModalHeader>
+                    <ModalBody>
+                        <VStack space='xl'>
+                            <VStack space='xs'>
+                                <Text lineHeight="$lg">
+                                    Grocery Name
+                                </Text>
+                                <Input>
+                                    <InputField type="text" placeholder='Enter grocery name' />
+                                </Input>
+                            </VStack>
+                            <VStack space='xs'>
+                                <Text lineHeight="$lg">
+                                    Detail
+                                </Text>
+                                <Input>
+                                    <InputField type="text" placeholder='Enter detail'/>
+                                </Input>
+                            </VStack>
+                            <VStack space='xs'>
+                                <Text lineHeight="$lg">
+                                    Quantity
+                                </Text>
+                                <Input>
+                                    <InputField type="text" placeholder='Enter quantity'/>
+                                </Input>
+                            </VStack>
+                            <VStack space='xs'>
+                                <Text lineHeight="$lg">
+                                    Price Per Item (RM)
+                                </Text>
+                                <Input>
+                                    <InputField type="text" placeholder='Enter price per item'/>
+                                </Input>
+                            </VStack>
+                        </VStack>
+                    </ModalBody>
+                    <ModalFooter>
+                        <HStack
+                            gap="$4"
+                        >
+                            <Button
+                                action='positive'
+                                onPress={ () => {
+                                        setShowModal(false);
+                                        toast.show({
+                                            placement: "top right",
+                                            render: ({ id }) => {
+                                              return (
+                                                <Toast nativeID={"toast-" + id} action="info" variant="accent">
+                                                  <VStack space="xs">
+                                                    <ToastTitle>Save item successful</ToastTitle>
+                                                    {/* <ToastDescription>
+                                                        Save item successful
+                                                    </ToastDescription> */}
+                                                  </VStack>
+                                                </Toast>
+                                              )
+                                            },
+                                          })
+                                        }
+                                }
+                            >
+                                    <ButtonText>Save</ButtonText>
+                                </Button>
+                            <Button
+                                action='secondary'
+                                onPress={ () => setShowModal(false) }
+                            >
+                                <ButtonText>Close</ButtonText>
+                            </Button>
+                        </HStack>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            {/* modal */}
+
             <ScrollView
                 h="$4/6"
             >
@@ -110,6 +232,7 @@ export function ListGroceriesToday(){
                     softShadow='1'
                     display='flex'
                     gap="$1"
+                    onPress={ () => setShowModal(true) }
                 >
                     <ButtonText>Add list to buy</ButtonText>
                     <ButtonIcon as={ PlusSquare }/>
