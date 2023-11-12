@@ -10,7 +10,7 @@ interface GroceryProps extends GroceryItemType{
     checkGroceryItem(id: string): void,
 }
 
-export function TodayGroceryItem({ id, name, detail, quantity, date, pricePerItem, isCheck, minusGroceryQuantity, addGroceryQuantity, checkGroceryItem }: GroceryProps) {
+export function TodayGroceryItem({ id, name, detail, groceryImageUri, quantity, date, pricePerItem, totalPricePerItem, isCheck, minusGroceryQuantity, addGroceryQuantity, checkGroceryItem }: GroceryProps) {
     return (
         <HStack
             maxHeight="$56"
@@ -26,8 +26,9 @@ export function TodayGroceryItem({ id, name, detail, quantity, date, pricePerIte
             >
                 <Image
                     size='md'
+                    borderRadius="$md"
                     source={{
-                        uri: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+                        uri: groceryImageUri,
                     }}
                     alt='grocery picture'
                 />
@@ -57,7 +58,7 @@ export function TodayGroceryItem({ id, name, detail, quantity, date, pricePerIte
                 alignItems='center'
                 justifyContent='space-around'
             >
-                <Heading>RM { pricePerItem }</Heading>
+                <Heading>RM { totalPricePerItem }</Heading>
                 <HStack
                     justifyContent='center'
                     gap="$1"
