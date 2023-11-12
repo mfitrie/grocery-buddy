@@ -16,7 +16,7 @@ export function ListGroceriesToday(){
             id: faker.database.mongodbObjectId(),
             name: faker.word.words(2),
             detail: faker.word.words(10),
-            quantity: faker.number.int({ max: 100 }),
+            quantity: faker.number.int({ max: 10 }),
             date: faker.date.anytime(),
             pricePerItem: +faker.commerce.price(),
             isCheck: faker.datatype.boolean(),
@@ -24,23 +24,39 @@ export function ListGroceriesToday(){
     ))
 
     const [listGroceryItem, setListGroceryItem] = useState<GroceryItemType[]>(dummyGroceryItem);
-    
-    const [quantity, setQuantity] = useState<number>(0);
+    const handleAddAndMinusQuantityInItem = (id: string, isAddQuantity: boolean) => {
+        setListGroceryItem(prevValue => prevValue.map(item => {
+            if(item.id == id){
+                return {
+                    ...item,
+                    quantity: item.quantity > 0 ? (isAddQuantity ? item.quantity + 1 : item.quantity - 1) : (isAddQuantity ? item.quantity + 1 : item.quantity),
+                }
+            }else {
+                return item;
+            }
+        }));
+    }
+    const addGroceryQuantity = (id: string) => {
+        handleAddAndMinusQuantityInItem(id, true);
+    }
+    const minusGroceryQuantity = (id: string) => {
+        handleAddAndMinusQuantityInItem(id, false);
+    }
+    const checkGroceryItem = (id: string) => {
+        setListGroceryItem(prevValue => prevValue.map(item => {
+            if(item.id == id){
+                return {
+                    ...item,
+                    isCheck: item.isCheck = !item.isCheck, 
+                }
+            }else {
+                return item;
+            }
+        }));
+    }
+
     const [isCheck, setCheck] = useState(false);
     const insets = useSafeAreaInsets();
-
-    const addQuantity = () => {
-        setQuantity(prevValue => prevValue + 1);
-    } 
-    const minusQuantity = () => {
-        setQuantity(prevValue => {
-            if(prevValue <= 0){
-                return 0;
-            }
-
-            return prevValue - 1;
-        });
-    }
 
     const checkHandler = () => {
         setCheck(prevValue => prevValue = !prevValue);
@@ -51,9 +67,10 @@ export function ListGroceriesToday(){
             {
                 listGroceryItem.map((item, index) => (
                     <TodayGroceryItem 
-                        addQuantity={addQuantity}
-                        minusQuantity={minusQuantity}
-                        checkHandler={checkHandler}
+                        id={ item.id }
+                        addGroceryQuantity={ addGroceryQuantity }
+                        minusGroceryQuantity={ minusGroceryQuantity }
+                        checkGroceryItem={ checkGroceryItem }
                         name={ item.name }
                         detail={ item.detail }
                         quantity={item.quantity}
@@ -63,13 +80,6 @@ export function ListGroceriesToday(){
                     />    
                 ))
             }
-            {/* <TodayGroceryItem 
-                addQuantity={addQuantity}
-                minusQuantity={minusQuantity}
-                checkHandler={checkHandler}
-                isCheck={isCheck}
-                quantity={quantity} 
-            /> */}
         </ScrollView>
     )
 }

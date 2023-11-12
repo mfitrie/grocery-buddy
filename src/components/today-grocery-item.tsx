@@ -5,12 +5,12 @@ import { Pencil, PlusSquare, MinusSquare, CheckSquare } from "lucide-react-nativ
 import { GroceryItemType } from "../types/grocery-item-type";
 
 interface GroceryProps extends GroceryItemType{
-    addQuantity(): void,
-    minusQuantity(): void,
-    checkHandler(): void,
+    addGroceryQuantity(id: string): void,
+    minusGroceryQuantity(id: string): void,
+    checkGroceryItem(id: string): void,
 }
 
-export function TodayGroceryItem({ id, name, detail, quantity, date, pricePerItem, isCheck, minusQuantity, addQuantity, checkHandler }: GroceryProps) {
+export function TodayGroceryItem({ id, name, detail, quantity, date, pricePerItem, isCheck, minusGroceryQuantity, addGroceryQuantity, checkGroceryItem }: GroceryProps) {
     return (
         <HStack
             maxHeight="$56"
@@ -64,7 +64,7 @@ export function TodayGroceryItem({ id, name, detail, quantity, date, pricePerIte
                 >
                     <Box>
                         <TouchableOpacity
-                            onPress={minusQuantity}
+                            onPress={() => minusGroceryQuantity(id)}
                         >
                             <MinusSquare
                                 color='#000'
@@ -74,7 +74,7 @@ export function TodayGroceryItem({ id, name, detail, quantity, date, pricePerIte
                     <Text size='sm'>{ quantity }</Text>
                     <Box>
                         <TouchableOpacity
-                            onPress={addQuantity}
+                            onPress={ () => addGroceryQuantity(id) }
                         >
                             <PlusSquare color='#000' />
                         </TouchableOpacity>
@@ -92,7 +92,7 @@ export function TodayGroceryItem({ id, name, detail, quantity, date, pricePerIte
                     bgColor="$blue400"
                     size="md"
                     status={isCheck ? "checked" : "unchecked"}
-                    onPress={checkHandler}
+                    onPress={ () => checkGroceryItem(id)}
                     color='#2ecc71'
                 ></Checkbox>
             </VStack>
