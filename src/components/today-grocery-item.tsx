@@ -14,7 +14,6 @@ export function TodayGroceryItem({ id, name, detail, groceryImageUri, quantity, 
     return (
         <HStack
             maxHeight="$56"
-            bgColor='$blue200'
             alignItems='center'
             justifyContent='center'
             py="$4"

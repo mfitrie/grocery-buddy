@@ -52,7 +52,7 @@ export function ListGroceriesToday(){
             }
         });
 
-    const [listGroceryItem, setListGroceryItem] = useState<GroceryItemType[]>([]);
+    const [listGroceryItem, setListGroceryItem] = useState<GroceryItemType[]>(dummyGroceryItem);
     const handleAddAndMinusQuantityInItem = (id: string, isAddQuantity: boolean) => {
         setListGroceryItem(prevValue => prevValue.map(item => {
             if(item.id == id){

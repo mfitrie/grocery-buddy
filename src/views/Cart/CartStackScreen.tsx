@@ -10,6 +10,7 @@ export default function CartStackScreen(){
             <CartStack.Screen 
                 name={ CartRoutes.CartHome.toString() }
                 component={ ListGroceriesToday }
+                options={{ title: "List Groceries Today" }}
             />
         </CartStack.Navigator>
     )

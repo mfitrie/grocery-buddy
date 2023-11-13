@@ -23,14 +23,26 @@ export function HomePage({ navigation }){
                 <Text>You have: </Text>
             </VStack>
             <TouchableOpacity onPress={() => navigation.navigate( MainRoutes.Collection.toString() )}>
-                <HStack borderWidth={1} py="$8" borderRadius={5} justifyContent="space-around" alignItems="center">
+                <HStack
+                    borderWidth={1} 
+                    py="$8" 
+                    borderRadius={5} 
+                    justifyContent="space-around" 
+                    alignItems="center"
+                >
                     <Text size="3xl" bold="true">10</Text>
                     <Text size="2xl">Collections</Text>
                     <Ionicons name="albums-outline" size={30} color="#000"/>
                 </HStack>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate( MainRoutes.Cart.toString() )}>
-                <HStack borderWidth={1} py="$8" borderRadius={5} justifyContent="space-around" alignItems="center">
+                <HStack 
+                    borderWidth={1} 
+                    py="$8" 
+                    borderRadius={5} 
+                    justifyContent="space-around" 
+                    alignItems="center"
+                >
                     <Text size="3xl" bold="true">50</Text>
                     <Text size="2xl">Grocery Item</Text>
                     <Ionicons name="cart-outline" size={30} color="#000"/>

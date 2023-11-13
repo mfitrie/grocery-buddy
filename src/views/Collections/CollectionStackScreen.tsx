@@ -12,7 +12,7 @@ export default function CollectionStackScreen(){
                 name={ CollectionRoutes.CollectionHome.toString() }
                 component={ CollectionsPage }
                 options={{
-                    title: "Collections",
+                    title: "Groceries Collection",
                 }}
             />
             <CollectionStack.Screen 
