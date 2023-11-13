@@ -29,6 +29,7 @@ import { Checkbox } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { CheckSquare, PlusSquare } from "lucide-react-native";
+import LottieView from 'lottie-react-native';
 import { TodayGroceryItem } from '../../components/today-grocery-item';
 import { GroceryItemType } from '../../types/grocery-item-type';
 
@@ -51,7 +52,7 @@ export function ListGroceriesToday(){
             }
         });
 
-    const [listGroceryItem, setListGroceryItem] = useState<GroceryItemType[]>(dummyGroceryItem);
+    const [listGroceryItem, setListGroceryItem] = useState<GroceryItemType[]>([]);
     const handleAddAndMinusQuantityInItem = (id: string, isAddQuantity: boolean) => {
         setListGroceryItem(prevValue => prevValue.map(item => {
             if(item.id == id){
@@ -109,145 +110,168 @@ export function ListGroceriesToday(){
         <VStack
             h="$full"
         >
-            {/* modal */}
-            <Modal
-                isOpen={showModal}
-                onClose={() => {
-                    setShowModal(false);
-                }}
-            >
-                <ModalBackdrop />
-                <ModalContent>
-                    <ModalHeader>
-                        <VStack space="sm">
-                            <Heading size="lg">Item information</Heading>
-                        </VStack>
-                    </ModalHeader>
-                    <ModalBody>
-                        <VStack space='xl'>
-                            <VStack space='xs'>
-                                <Text lineHeight="$lg">
-                                    Grocery Name
-                                </Text>
-                                <Input>
-                                    <InputField type="text" placeholder='Enter grocery name' />
-                                </Input>
-                            </VStack>
-                            <VStack space='xs'>
-                                <Text lineHeight="$lg">
-                                    Detail
-                                </Text>
-                                <Input>
-                                    <InputField type="text" placeholder='Enter detail'/>
-                                </Input>
-                            </VStack>
-                            <VStack space='xs'>
-                                <Text lineHeight="$lg">
-                                    Quantity
-                                </Text>
-                                <Input>
-                                    <InputField type="text" placeholder='Enter quantity'/>
-                                </Input>
-                            </VStack>
-                            <VStack space='xs'>
-                                <Text lineHeight="$lg">
-                                    Price Per Item (RM)
-                                </Text>
-                                <Input>
-                                    <InputField type="text" placeholder='Enter price per item'/>
-                                </Input>
-                            </VStack>
-                        </VStack>
-                    </ModalBody>
-                    <ModalFooter>
-                        <HStack
-                            gap="$4"
-                        >
-                            <Button
-                                action='positive'
-                                onPress={ () => {
-                                        setShowModal(false);
-                                        toast.show({
-                                            placement: "top right",
-                                            render: ({ id }) => {
-                                              return (
-                                                <Toast nativeID={"toast-" + id} action="info" variant="accent">
-                                                  <VStack space="xs">
-                                                    <ToastTitle>Save item successful</ToastTitle>
-                                                    {/* <ToastDescription>
-                                                        Save item successful
-                                                    </ToastDescription> */}
-                                                  </VStack>
-                                                </Toast>
-                                              )
-                                            },
-                                          })
+            {
+                listGroceryItem.length !== 0 ? 
+                <>
+                    <Modal
+                        isOpen={showModal}
+                        onClose={() => {
+                            setShowModal(false);
+                        }}
+                    >
+                        <ModalBackdrop />
+                        <ModalContent>
+                            <ModalHeader>
+                                <VStack space="sm">
+                                    <Heading size="lg">Item information</Heading>
+                                </VStack>
+                            </ModalHeader>
+                            <ModalBody>
+                                <VStack space='xl'>
+                                    <VStack space='xs'>
+                                        <Text lineHeight="$lg">
+                                            Grocery Name
+                                        </Text>
+                                        <Input>
+                                            <InputField type="text" placeholder='Enter grocery name' />
+                                        </Input>
+                                    </VStack>
+                                    <VStack space='xs'>
+                                        <Text lineHeight="$lg">
+                                            Detail
+                                        </Text>
+                                        <Input>
+                                            <InputField type="text" placeholder='Enter detail'/>
+                                        </Input>
+                                    </VStack>
+                                    <VStack space='xs'>
+                                        <Text lineHeight="$lg">
+                                            Quantity
+                                        </Text>
+                                        <Input>
+                                            <InputField type="text" placeholder='Enter quantity'/>
+                                        </Input>
+                                    </VStack>
+                                    <VStack space='xs'>
+                                        <Text lineHeight="$lg">
+                                            Price Per Item (RM)
+                                        </Text>
+                                        <Input>
+                                            <InputField type="text" placeholder='Enter price per item'/>
+                                        </Input>
+                                    </VStack>
+                                </VStack>
+                            </ModalBody>
+                            <ModalFooter>
+                                <HStack
+                                    gap="$4"
+                                >
+                                    <Button
+                                        action='positive'
+                                        onPress={ () => {
+                                                setShowModal(false);
+                                                toast.show({
+                                                    placement: "top right",
+                                                    render: ({ id }) => {
+                                                    return (
+                                                        <Toast nativeID={"toast-" + id} action="info" variant="accent">
+                                                        <VStack space="xs">
+                                                            <ToastTitle>Save item successful</ToastTitle>
+                                                            {/* <ToastDescription>
+                                                                Save item successful
+                                                            </ToastDescription> */}
+                                                        </VStack>
+                                                        </Toast>
+                                                    )
+                                                    },
+                                                })
+                                                }
                                         }
-                                }
-                            >
-                                    <ButtonText>Save</ButtonText>
-                                </Button>
-                            <Button
-                                action='secondary'
-                                onPress={ () => setShowModal(false) }
-                            >
-                                <ButtonText>Close</ButtonText>
-                            </Button>
-                        </HStack>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
-            {/* modal */}
+                                    >
+                                            <ButtonText>Save</ButtonText>
+                                        </Button>
+                                    <Button
+                                        action='secondary'
+                                        onPress={ () => setShowModal(false) }
+                                    >
+                                        <ButtonText>Close</ButtonText>
+                                    </Button>
+                                </HStack>
+                            </ModalFooter>
+                        </ModalContent>
+                    </Modal>
 
-            <ScrollView
-                h="$4/6"
-            >
-                {
-                    listGroceryItem.map((item, index) => (
-                        <TodayGroceryItem 
-                            id={ item.id }
-                            addGroceryQuantity={ addGroceryQuantity }
-                            minusGroceryQuantity={ minusGroceryQuantity }
-                            checkGroceryItem={ checkGroceryItem }
-                            name={ item.name }
-                            detail={ item.detail }
-                            groceryImageUri={ item.groceryImageUri }
-                            quantity={item.quantity}
-                            pricePerItem={ item.pricePerItem }
-                            totalPricePerItem={ item.totalPricePerItem }
-                            isCheck={item.isCheck}
-                            key={index}
-                        />    
-                    ))
-                }
-            </ScrollView>
-            <VStack
-                h="$1/6"
-                justifyContent='center'
-                gap="$3"
-                px="$4"
-            >
-                <Button
-                    bgColor='#E67E22'
-                    softShadow='1'
-                    display='flex'
-                    gap="$1"
-                    onPress={ () => setShowModal(true) }
+                    <ScrollView
+                        h="$4/6"
+                    >
+                        {
+                            listGroceryItem.map((item, index) => (
+                                <TodayGroceryItem 
+                                    id={ item.id }
+                                    addGroceryQuantity={ addGroceryQuantity }
+                                    minusGroceryQuantity={ minusGroceryQuantity }
+                                    checkGroceryItem={ checkGroceryItem }
+                                    name={ item.name }
+                                    detail={ item.detail }
+                                    groceryImageUri={ item.groceryImageUri }
+                                    quantity={item.quantity}
+                                    pricePerItem={ item.pricePerItem }
+                                    totalPricePerItem={ item.totalPricePerItem }
+                                    isCheck={item.isCheck}
+                                    key={index}
+                                />    
+                            ))
+                        }
+                    </ScrollView>
+                    <VStack
+                        h="$1/6"
+                        justifyContent='center'
+                        gap="$3"
+                        px="$4"
+                    >
+                        <Button
+                            bgColor='#E67E22'
+                            softShadow='1'
+                            display='flex'
+                            gap="$1"
+                            onPress={ () => setShowModal(true) }
+                        >
+                            <ButtonText>Add list to buy</ButtonText>
+                            <ButtonIcon as={ PlusSquare }/>
+                        </Button>
+                        <Button
+                            bgColor='#2ECC71'
+                            softShadow='1'
+                            display='flex'
+                            gap="$1"
+                            onPress={ () => markListChecked() }
+                        >
+                            <ButtonText>Mark all as done</ButtonText>
+                            <ButtonIcon as={ CheckSquare }/>
+                        </Button>
+                    </VStack>    
+                </>
+                :
+                <VStack
+                    bgColor='$coolGray300'
+                    h="$3/6"
+                    mt="$32"
+                    mx="$10"
+                    alignItems='center'
+                    justifyContent='center'
+                    borderRadius="$lg"
+                    hardShadow='1'
                 >
-                    <ButtonText>Add list to buy</ButtonText>
-                    <ButtonIcon as={ PlusSquare }/>
-                </Button>
-                <Button
-                    bgColor='#2ECC71'
-                    softShadow='1'
-                    display='flex'
-                    gap="$1"
-                    onPress={ () => markListChecked() }
-                >
-                    <ButtonText>Mark all as done</ButtonText>
-                    <ButtonIcon as={ CheckSquare }/>
-                </Button>
-            </VStack>
+                    <LottieView
+                        source={ require("../../assets/LottieAnimation/no-data-two.json") }
+                        autoPlay
+                        loop
+                        resizeMode='cover'
+                    />
+                    <Text bold='true' size='lg'>No list groceries for today</Text>
+                </VStack>
+            }
+            
         </VStack>
     )
 }
