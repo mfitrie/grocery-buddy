@@ -15,7 +15,7 @@ import {
   ButtonText,
 } from "@gluestack-ui/themed";
 import { store } from "./src/store/store";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import CardInfo from "./src/components/card-info";
 import ButtonIncrement from "./src/components/button-increment";
 import axios from "axios";
@@ -28,10 +28,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { CollectionsPage } from "./src/views/Collections/CollectionsPage";
 import { ListGroceriesToday } from "./src/views/Cart/ListGroceriesToday";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { faker } from "@faker-js/faker";
+import { CollectionGroceryType } from "./src/types/collection-grocery-type";
+import { initGroceryCollection } from "./src/store/grocery";
 
 
 export default function App() {
-
   return (
     <Provider store={ store }>
       <GluestackUIProvider config={config.theme}>

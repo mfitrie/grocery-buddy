@@ -5,27 +5,14 @@ import dayjs from 'dayjs';
 import { ShoppingCart, Bell, BellOff, Boxes } from "lucide-react-native";
 import { useState } from 'react';
 import { faker } from '@faker-js/faker';
+import { useSelector } from 'react-redux';
 
 export function CollectionsPage({ navigation }){
-    interface CollectionType{
-        id: string,
-        name: string,
-        date: Date,
-        quantity: number,
-        isOnNotification: boolean,
-    }
-
-    const dummyCollections: CollectionType[] = Array(10).fill(null).map(item => ({
-        id: faker.database.mongodbObjectId(),
-        name: faker.word.words(2),
-        date: faker.date.anytime(),
-        quantity: faker.number.int({ max: 10 }),
-        isOnNotification: faker.datatype.boolean(),
-    }))
-
-    const [collections, setCollections] = useState<CollectionType[]>(dummyCollections);
-
     const insets = useSafeAreaInsets();
+    
+    const { listGroceryCollection } = useSelector((state: any) => state.grocery);
+
+    
     return (
         // <Box
         //     px="$5"
@@ -48,10 +35,10 @@ export function CollectionsPage({ navigation }){
                 h="$5/6"
             >
                 {
-                    collections.map(item => (
+                    listGroceryCollection.map(item => (
                         <TouchableOpacity
-                            key={ item.id }
-                            onPress={() => navigation.push("CollectionItem", { id: item.id })}
+                            key={ item.collectionId }
+                            onPress={() => navigation.push("CollectionItem", { collectionId: item.collectionId })}
                         >
                             <HStack
                                 maxHeight="$56"
@@ -74,7 +61,7 @@ export function CollectionsPage({ navigation }){
                                 >
                                     <Text>Quantity</Text>
                                     <Icon as={ ShoppingCart } size='md' mr="$2"/>
-                                    <Text>{ item.quantity }</Text>
+                                    <Text>{ item.listGrocery.length }</Text>
                                 </HStack>
                                 {
                                     item.isOnNotification ? 

@@ -50,7 +50,7 @@ export function ListGroceriesToday(){
                 totalPricePerItem: pricePerItem,
                 isCheck: faker.datatype.boolean(),
             }
-        });
+    });
 
     const [listGroceryItem, setListGroceryItem] = useState<GroceryItemType[]>(dummyGroceryItem);
     const handleAddAndMinusQuantityInItem = (id: string, isAddQuantity: boolean) => {
@@ -218,6 +218,7 @@ export function ListGroceriesToday(){
                                     pricePerItem={ item.pricePerItem }
                                     totalPricePerItem={ item.totalPricePerItem }
                                     isCheck={item.isCheck}
+                                    isHaveDeleteButton={ false }
                                     key={index}
                                 />    
                             ))
@@ -262,12 +263,12 @@ export function ListGroceriesToday(){
                     borderRadius="$lg"
                     hardShadow='1'
                 >
-                    <LottieView
+                    {/* <LottieView
                         source={ require("../../assets/LottieAnimation/no-data-two.json") }
                         autoPlay
                         loop
                         resizeMode='cover'
-                    />
+                    /> */}
                     <Text bold='true' size='lg'>No list groceries for today</Text>
                 </VStack>
             }

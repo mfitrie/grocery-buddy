@@ -1,16 +1,18 @@
-import { HStack, VStack, Image, Heading, Text, Button, ButtonText, ButtonIcon, Box } from "@gluestack-ui/themed";
-import { TouchableOpacity } from "react-native";
+import { HStack, VStack, Image, Heading, Text, Button, ButtonText, ButtonIcon, Box, Icon } from "@gluestack-ui/themed";
+import { Pressable, TouchableOpacity } from "react-native";
 import { Checkbox } from 'react-native-paper';
-import { Pencil, PlusSquare, MinusSquare, CheckSquare } from "lucide-react-native";
+import { Pencil, PlusSquare, MinusSquare, CheckSquare, Trash2 } from "lucide-react-native";
 import { GroceryItemType } from "../types/grocery-item-type";
 
 interface GroceryProps extends GroceryItemType{
     addGroceryQuantity(id: string): void,
     minusGroceryQuantity(id: string): void,
     checkGroceryItem(id: string): void,
+    removeGroceryItem(id: string): void,
+    isHaveDeleteButton: boolean,
 }
 
-export function TodayGroceryItem({ id, name, detail, groceryImageUri, quantity, date, pricePerItem, totalPricePerItem, isCheck, minusGroceryQuantity, addGroceryQuantity, checkGroceryItem }: GroceryProps) {
+export function TodayGroceryItem({ id, name, detail, groceryImageUri, quantity, date, pricePerItem, totalPricePerItem, isCheck, isHaveDeleteButton, minusGroceryQuantity, addGroceryQuantity, checkGroceryItem, removeGroceryItem }: GroceryProps) {
     return (
         <HStack
             maxHeight="$56"
@@ -82,20 +84,37 @@ export function TodayGroceryItem({ id, name, detail, groceryImageUri, quantity, 
                 </HStack>
             </VStack>
 
-            <VStack
-                h="$full"
-                w="10%"
-                justifyContent='center'
-                alignItems='center'
-            >
-                <Checkbox
-                    bgColor="$blue400"
-                    size="md"
-                    status={isCheck ? "checked" : "unchecked"}
-                    onPress={ () => checkGroceryItem(id)}
-                    color='#2ecc71'
-                ></Checkbox>
-            </VStack>
+            {
+                isHaveDeleteButton ? 
+                <VStack
+                    h="$full"
+                    w="10%"
+                    justifyContent='center'
+                    alignItems='center'
+                >
+                    <TouchableOpacity
+                        onPress={ () => removeGroceryItem(id) }
+                    >
+                        <Icon as={ Trash2 } color="$red600"/>
+                    </TouchableOpacity>
+                </VStack>
+                :
+                <VStack
+                    h="$full"
+                    w="10%"
+                    justifyContent='center'
+                    alignItems='center'
+                >
+                    <Checkbox
+                        bgColor="$blue400"
+                        size="md"
+                        status={isCheck ? "checked" : "unchecked"}
+                        onPress={ () => checkGroceryItem(id)}
+                        color='#2ecc71'
+                    ></Checkbox>
+                </VStack>
+
+            }
         </HStack>
     )
 }

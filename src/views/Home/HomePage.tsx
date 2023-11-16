@@ -3,9 +3,42 @@ import { Ionicons } from "@expo/vector-icons"
 import { TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MainRoutes } from "../../constant/route-types";
+import { useDispatch, useSelector } from "react-redux";
+import { CollectionGroceryType } from "../../types/collection-grocery-type";
+import { faker } from "@faker-js/faker";
+import { initGroceryCollection } from "../../store/grocery";
 
 export function HomePage({ navigation }){
     const insets = useSafeAreaInsets();
+
+    // init collection dummy value
+    // const { listGroceryCollection } = useSelector((state: any) => state.grocery);
+    const dispatch = useDispatch();
+    const dummyCollectionGrocery: CollectionGroceryType[] = Array(10).fill(null).map(item => {
+        return {
+            collectionId: faker.database.mongodbObjectId(),
+            name: faker.word.words(2),
+            date: faker.date.anytime(),
+            isOnNotification: faker.datatype.boolean(),
+            listGrocery: Array(10).fill(null).map(itemTwo => {
+                const pricePerItem = +faker.commerce.price({ max: 50 });
+                return {
+                    id: faker.database.mongodbObjectId(),
+                    name: faker.word.words(2),
+                    detail: faker.word.words(10),
+                    groceryImageUri: faker.image.urlLoremFlickr({ category: 'food' }),
+                    quantity: 1,
+                    date: faker.date.anytime(),
+                    pricePerItem,
+                    totalPricePerItem: pricePerItem,
+                    isCheck: faker.datatype.boolean(),
+                }
+            }),
+        }
+
+    });
+
+    dispatch(initGroceryCollection(dummyCollectionGrocery));
 
     return (
         <VStack 
