@@ -1,10 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { CollectionGroceryType } from "../types/collection-grocery-type";
 import { GroceryItemType } from "../types/grocery-item-type";
 
+
+interface RemoveGroceryItemActionType {
+  collectionId: string,
+  groceryId: string,
+}
+
+
 const grocerySlice = createSlice({
   name: "message",
-  initialState: { 
+  initialState: {
     // listGroceryItem: [
     //     {
     //         collectionId: "12345",
@@ -31,21 +38,21 @@ const grocerySlice = createSlice({
   },
   reducers: {
     initGroceryCollection: (state, action) => {
-        state.listGroceryCollection = action.payload;
+      state.listGroceryCollection = action.payload;
     },
-    removeGroceryItemFromCollection: (state, action) => {
-        const { collectionId, groceryId } = action.payload;
+    removeGroceryItemFromCollection: (state, action: PayloadAction<RemoveGroceryItemActionType>) => {
+      const { collectionId, groceryId } = action.payload;
 
-        state.listGroceryCollection = state.listGroceryCollection
+      state.listGroceryCollection = state.listGroceryCollection
         .map((item: CollectionGroceryType) => {
-            if(item.collectionId === collectionId){
-                return {
-                    ...item,
-                    listGrocery: item.listGrocery.filter(itemGrocery => itemGrocery.id !== groceryId),
-                }
+          if (item.collectionId === collectionId) {
+            return {
+              ...item,
+              listGrocery: item.listGrocery.filter(itemGrocery => itemGrocery.id !== groceryId),
             }
+          }
 
-            return item;
+          return item;
 
         })
 
