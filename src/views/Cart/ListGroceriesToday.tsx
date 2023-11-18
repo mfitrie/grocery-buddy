@@ -32,68 +32,15 @@ import { CheckSquare, PlusSquare } from "lucide-react-native";
 import LottieView from 'lottie-react-native';
 import { TodayGroceryItem } from '../../components/today-grocery-item';
 import { GroceryItemType } from '../../types/grocery-item-type';
+import { useDispatch, useSelector } from 'react-redux';
+import { addGroceryQuantity, minusGroceryQuantity, tickCheckGroceryItem, tickAllGroceryItemAsDone } from '../../store/grocery';
 
 export function ListGroceriesToday(){
-    
 
-    const dummyGroceryItem: GroceryItemType[] = Array(10).fill(null).map(item => {
-        const pricePerItem = +faker.commerce.price({ max: 50 });
-
-        return {
-                id: faker.database.mongodbObjectId(),
-                name: faker.word.words(2),
-                detail: faker.word.words(10),
-                groceryImageUri: faker.image.urlLoremFlickr({ category: 'food' }),
-                quantity: 1,
-                date: faker.date.anytime(),
-                pricePerItem,
-                totalPricePerItem: pricePerItem,
-                isCheck: faker.datatype.boolean(),
-            }
-    });
-
-    const [listGroceryItem, setListGroceryItem] = useState<GroceryItemType[]>(dummyGroceryItem);
-    const handleAddAndMinusQuantityInItem = (id: string, isAddQuantity: boolean) => {
-        setListGroceryItem(prevValue => prevValue.map(item => {
-            if(item.id == id){
-                const quantity = item.quantity > 0 ? (isAddQuantity ? item.quantity + 1 : item.quantity - 1) : (isAddQuantity ? item.quantity + 1 : item.quantity);
-                const totalPricePerItem = item.pricePerItem * quantity; 
-
-                return {
-                    ...item,
-                    quantity,
-                    totalPricePerItem,
-                }
-            }else {
-                return item;
-            }
-        }));
-    }
-    const addGroceryQuantity = (id: string) => {
-        handleAddAndMinusQuantityInItem(id, true);
-    }
-    const minusGroceryQuantity = (id: string) => {
-        handleAddAndMinusQuantityInItem(id, false);
-    }
-    const checkGroceryItem = (id: string) => {
-        setListGroceryItem(prevValue => prevValue.map(item => {
-            if(item.id == id){
-                return {
-                    ...item,
-                    isCheck: item.isCheck = !item.isCheck, 
-                }
-            }else {
-                return item;
-            }
-        }));
-    }
-
-    const markListChecked = () => {
-        setListGroceryItem(prevValue => prevValue.map(item => ({
-            ...item,
-            isCheck: true,
-        })));
-    }
+    const { listGroceryCollection } = useSelector((state: any) => state.grocery);
+    const collectionGrocery = listGroceryCollection[0];
+    const listGroceryItem = collectionGrocery.listGrocery;
+    const dispatch = useDispatch();
 
     // modal
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -208,9 +155,9 @@ export function ListGroceriesToday(){
                             listGroceryItem.map((item, index) => (
                                 <TodayGroceryItem 
                                     id={ item.id }
-                                    addGroceryQuantity={ addGroceryQuantity }
-                                    minusGroceryQuantity={ minusGroceryQuantity }
-                                    checkGroceryItem={ checkGroceryItem }
+                                    addGroceryQuantity={ () => dispatch(addGroceryQuantity({ collectionId: collectionGrocery.collectionId, groceryId: item.id })) }
+                                    minusGroceryQuantity={ () => dispatch(minusGroceryQuantity({ collectionId: collectionGrocery.collectionId, groceryId: item.id })) }
+                                    checkGroceryItem={ () => dispatch(tickCheckGroceryItem({ collectionId: collectionGrocery.collectionId, groceryId: item.id })) }
                                     name={ item.name }
                                     detail={ item.detail }
                                     groceryImageUri={ item.groceryImageUri }
@@ -245,7 +192,7 @@ export function ListGroceriesToday(){
                             softShadow='1'
                             display='flex'
                             gap="$1"
-                            onPress={ () => markListChecked() }
+                            onPress={ () => dispatch(tickAllGroceryItemAsDone({ collectionId: collectionGrocery.collectionId })) }
                         >
                             <ButtonText>Mark all as done</ButtonText>
                             <ButtonIcon as={ CheckSquare }/>
