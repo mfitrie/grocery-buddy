@@ -158,8 +158,46 @@ const grocerySlice = createSlice({
         listGrocery: modifyListGroceryItem,
       }));
        
-    }
+    },
+    turnOnNotificationCollection(state, action: PayloadAction<TickAllkGroceryItemDoneActionType>){
+      const { collectionId } = action.payload;
+      
+      state.listGroceryCollection = state.listGroceryCollection
+      .map(item => {
+        if(item.collectionId === collectionId){
+          return {
+            ...item,
+            isOnNotification: true,
+          }
+        }
 
+        return {
+          ...item,
+        }
+
+      });
+
+    },
+    turnOffNotificationCollection(state, action: PayloadAction<TickAllkGroceryItemDoneActionType>){
+      const { collectionId } = action.payload;
+      
+      state.listGroceryCollection = state.listGroceryCollection
+      .map(item => {
+        if(item.collectionId === collectionId){
+          return {
+            ...item,
+            isOnNotification: false,
+          }
+        }
+
+        return {
+          ...item,
+        }
+
+      });
+
+    },
+ 
     // increment: (state) => {
     //   state.value += 1;
     // },
@@ -203,5 +241,7 @@ export const {
   minusGroceryQuantity,
   tickCheckGroceryItem,
   tickAllGroceryItemAsDone,
+  turnOnNotificationCollection,
+  turnOffNotificationCollection,
 } = grocerySlice.actions;
 export default grocerySlice.reducer;
