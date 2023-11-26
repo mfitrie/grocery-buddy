@@ -3,7 +3,7 @@ import { Text, Box, Button, ButtonText, VStack, HStack, Heading, Icon, ScrollVie
 import { TouchableOpacity } from 'react-native';
 import dayjs from 'dayjs';
 import { ShoppingCart, Bell, BellOff, Boxes } from "lucide-react-native";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
 import { useSelector } from 'react-redux';
 
@@ -12,22 +12,7 @@ export function CollectionsPage({ navigation }){
     
     const { listGroceryCollection } = useSelector((state: any) => state.grocery);
 
-    
     return (
-        // <Box
-        //     px="$5"
-        //     style={{
-        //         // Paddings to handle safe area
-        //         paddingTop: insets.top,
-        //         paddingBottom: insets.bottom,
-        //     }}
-        // >
-        //     <Text>Collections Page</Text>
-        //     <Button onPress={() => navigation.push("CollectionItem")}>
-        //         <ButtonText>Move to Collection Item</ButtonText>
-        //     </Button>
-        // </Box>
-
         <VStack
             h="$full"
         >
@@ -64,14 +49,8 @@ export function CollectionsPage({ navigation }){
                                     <Text>{ item.listGrocery.length }</Text>
                                 </HStack>
                                 {
-                                    item.isOnNotification ? 
                                     <Icon
-                                        as={ Bell }
-                                        size='xl'
-                                    />
-                                    :
-                                    <Icon
-                                        as={ BellOff }
+                                        as={ item.isOnNotification ? Bell : BellOff}
                                         size='xl'
                                     />
                                 }

@@ -1,7 +1,7 @@
 import { Box, Button, ButtonText, ButtonIcon, ScrollView, Text, VStack } from "@gluestack-ui/themed";
 import { TodayGroceryItem } from "../../components/today-grocery-item";
 import { GroceryItemType } from "../../types/grocery-item-type";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
 import { Trash2, Bell, BellOff } from "lucide-react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,14 +13,12 @@ export default function CollectionItem({ route }){
     const { listGroceryCollection } = useSelector((state: any) => state.grocery);
     const dispatch = useDispatch();
     
-    const collectionId = route.params?.collectionId
+    const collectionId = route.params?.collectionId;
     
     const collectionItem = listGroceryCollection
     .find((item: CollectionGroceryType) => item.collectionId === collectionId);
     
     const listGrocery = collectionItem.listGrocery;
-    
-    // const [isCollectionOnNotification, setCollectionOnNotification] = useState(collectionItem.isOnNotification);
     
 
     return (
@@ -66,38 +64,18 @@ export default function CollectionItem({ route }){
                 gap="$3"
                 px="$4"
             >
-                {
-                    collectionItem.isOnNotification ? 
-                    <Button
-                        softShadow='1'
-                        display='flex'
-                        gap="$1"
-                        action="positive"
-                        onPress={ () => { 
-                            dispatch(turnOffNotificationCollection(collectionId))
-                            console.log("isOnNotification: ", collectionItem.isOnNotification); 
-
-                        } }
-                    >
-                        <ButtonText>Disable Notification Reminder</ButtonText>
-                        <ButtonIcon as={ BellOff }/>
-                    </Button>
-                    :
-                    <Button
-                        softShadow='1'
-                        display='flex'
-                        gap="$1"
-                        action="positive"
-                        onPress={ () => { 
-                            dispatch(turnOnNotificationCollection(collectionId))
-                            console.log("isOnNotification: ", collectionItem.isOnNotification); 
-                        } }
-                    >
-                        <ButtonText>Enable Notification Reminder </ButtonText>
-                        <ButtonIcon as={ Bell }/>
-                    </Button>
-                    
-                }
+                <Button
+                    softShadow='1'
+                    display='flex'
+                    gap="$1"
+                    action="positive"
+                    onPress={() => {
+                        dispatch(collectionItem.isOnNotification ? turnOffNotificationCollection({ collectionId }) : turnOnNotificationCollection({ collectionId }));
+                    }}
+                >
+                    <ButtonText>Enable Notification Reminder </ButtonText>
+                    <ButtonIcon as={ collectionItem.isOnNotification ? Bell : BellOff }/>
+                </Button>
                 
                 <Button
                     softShadow='1'
