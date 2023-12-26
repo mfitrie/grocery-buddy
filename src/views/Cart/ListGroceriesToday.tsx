@@ -180,10 +180,10 @@ export function ListGroceriesToday(){
                                                     return (
                                                         <Toast nativeID={"toast-" + id} action="info" variant="accent">
                                                         <VStack space="xs">
-                                                            <ToastTitle>Save item successful</ToastTitle>
-                                                            {/* <ToastDescription>
+                                                            <ToastTitle>Grocery</ToastTitle>
+                                                            <ToastDescription>
                                                                 Save item successful
-                                                            </ToastDescription> */}
+                                                            </ToastDescription>
                                                         </VStack>
                                                         </Toast>
                                                     )
