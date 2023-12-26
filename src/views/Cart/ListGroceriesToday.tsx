@@ -34,10 +34,11 @@ import { TodayGroceryItem } from '../../components/today-grocery-item';
 import { GroceryItemType } from '../../types/grocery-item-type';
 import { useDispatch, useSelector } from 'react-redux';
 import { addGroceryItem, addGroceryQuantity, minusGroceryQuantity, tickCheckGroceryItem, tickAllGroceryItemAsDone } from '../../store/grocery';
+import { RootState } from '../../store/store';
 
 export function ListGroceriesToday(){
 
-    const { listGroceryCollection } = useSelector((state: any) => state.grocery);
+    const { listGroceryCollection } = useSelector((state: RootState) => state.grocery);
     const collectionGrocery = listGroceryCollection[0];
     const listGroceryItem = collectionGrocery.listGrocery;
     const dispatch = useDispatch();

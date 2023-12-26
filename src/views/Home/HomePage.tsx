@@ -7,10 +7,11 @@ import { useSelector } from "react-redux";
 import { CollectionGroceryType } from "../../types/collection-grocery-type";
 import { faker } from "@faker-js/faker";
 import { initGroceryCollection } from "../../store/grocery";
+import { RootState } from "../../store/store";
 
 export function HomePage({ navigation }){
     const insets = useSafeAreaInsets();
-    const { listGroceryCollection } = useSelector((state: any) => state.grocery);
+    const { listGroceryCollection } = useSelector((state: RootState) => state.grocery);
     
 
     return (
