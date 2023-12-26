@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { CollectionGroceryType } from "../types/collection-grocery-type";
 import { GroceryItemType } from "../types/grocery-item-type";
 import { faker } from "@faker-js/faker";
+import dayjs from "dayjs";
 
 
 interface RemoveGroceryItemActionType {
@@ -9,6 +10,15 @@ interface RemoveGroceryItemActionType {
   groceryId: string,
 }
 
+interface AddGroceryItemType extends Omit<RemoveGroceryItemActionType, "groceryId">{
+  collectionName: string,
+  collectionDate: Date,
+  collectionIsOnNotification: boolean,
+  groceryName: string,
+  detail: string,
+  quantity: number,
+  pricePerItem: number,
+}
 interface MinusGroceryItemActionType extends RemoveGroceryItemActionType{}
 interface AddGroceryItemActionType extends RemoveGroceryItemActionType{}
 interface TickCheckGroceryItemActionType extends RemoveGroceryItemActionType{}
@@ -70,6 +80,51 @@ const grocerySlice = createSlice({
   reducers: {
     initGroceryCollection: (state, action) => {
       state.listGroceryCollection = action.payload;
+    },
+    addGroceryItem: (state, action: PayloadAction<AddGroceryItemType>) => {
+      const { 
+        collectionId, 
+        collectionName,
+        collectionDate,
+        collectionIsOnNotification,
+        groceryName,
+        detail,
+        quantity,
+        pricePerItem 
+      } = action.payload;
+
+
+      const { listGrocery } = state.listGroceryCollection
+      .find(item => item.collectionId === collectionId);
+
+      listGrocery
+      .push({
+        id: faker.database.mongodbObjectId(),
+        name: groceryName,
+        detail,
+        quantity,
+        pricePerItem,
+        date: null,
+        groceryImageUri: faker.image.urlLoremFlickr({ category: 'food' }),
+        isCheck: false,
+        totalPricePerItem: pricePerItem * quantity,
+      });
+
+      state.listGroceryCollection = state.listGroceryCollection
+      .map(item => {
+        if(item.collectionId === collectionId){
+          return {
+            collectionId,
+            date: collectionDate,
+            isOnNotification: collectionIsOnNotification,
+            listGrocery,
+            name: collectionName,    
+          }
+        }
+
+        return item;
+      });
+
     },
     removeGroceryItemFromCollection: (state, action: PayloadAction<RemoveGroceryItemActionType>) => {
       const { collectionId, groceryId } = action.payload;
@@ -236,6 +291,7 @@ function handleAddAndMinusQuantityInItem(
 
 export const { 
   initGroceryCollection, 
+  addGroceryItem,
   removeGroceryItemFromCollection, 
   addGroceryQuantity, 
   minusGroceryQuantity,

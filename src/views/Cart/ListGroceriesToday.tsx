@@ -27,13 +27,13 @@ import {
 } from "@gluestack-ui/themed";
 import { Checkbox } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { CheckSquare, PlusSquare } from "lucide-react-native";
 import LottieView from 'lottie-react-native';
 import { TodayGroceryItem } from '../../components/today-grocery-item';
 import { GroceryItemType } from '../../types/grocery-item-type';
 import { useDispatch, useSelector } from 'react-redux';
-import { addGroceryQuantity, minusGroceryQuantity, tickCheckGroceryItem, tickAllGroceryItemAsDone } from '../../store/grocery';
+import { addGroceryItem, addGroceryQuantity, minusGroceryQuantity, tickCheckGroceryItem, tickAllGroceryItemAsDone } from '../../store/grocery';
 
 export function ListGroceriesToday(){
 
@@ -44,7 +44,17 @@ export function ListGroceriesToday(){
 
     // modal
     const [showModal, setShowModal] = useState<boolean>(false);
+    // -- modal input
+    const [groceryName, setGroceryName] = useState<string>("");
+    const [detail, setDetail] = useState<string>("");
+    const [quantity, setQuantity] = useState<number>(null);
+    const [pricePerItem, setPricePerItem] = useState<number>(null);
+    // -- modal input
     // modal
+
+
+
+
 
     // toast
     const toast = useToast();
@@ -80,7 +90,13 @@ export function ListGroceriesToday(){
                                             Grocery Name
                                         </Text>
                                         <Input>
-                                            <InputField type="text" placeholder='Enter grocery name' />
+                                            <InputField 
+                                                type="text" 
+                                                placeholder='Enter grocery name'
+                                                onChangeText={ (text: string) => { 
+                                                    setGroceryName(text)
+                                                } }
+                                            />
                                         </Input>
                                     </VStack>
                                     <VStack space='xs'>
@@ -88,7 +104,13 @@ export function ListGroceriesToday(){
                                             Detail
                                         </Text>
                                         <Input>
-                                            <InputField type="text" placeholder='Enter detail'/>
+                                            <InputField 
+                                                type="text" 
+                                                placeholder='Enter detail'
+                                                onChangeText={ (text: string) => { 
+                                                    setDetail(text)
+                                                } }
+                                            />
                                         </Input>
                                     </VStack>
                                     <VStack space='xs'>
@@ -96,7 +118,17 @@ export function ListGroceriesToday(){
                                             Quantity
                                         </Text>
                                         <Input>
-                                            <InputField type="text" placeholder='Enter quantity'/>
+                                            <InputField 
+                                                type="text"
+                                                placeholder='Enter quantity'
+                                                onChangeText={ (text: string) => { 
+                                                    if(!Number(+text)){
+                                                        setQuantity(null)
+                                                        return;
+                                                    }
+                                                    setQuantity(+text)
+                                                } }
+                                            />
                                         </Input>
                                     </VStack>
                                     <VStack space='xs'>
@@ -104,7 +136,17 @@ export function ListGroceriesToday(){
                                             Price Per Item (RM)
                                         </Text>
                                         <Input>
-                                            <InputField type="text" placeholder='Enter price per item'/>
+                                            <InputField 
+                                                type="text" 
+                                                placeholder='Enter price per item'
+                                                onChangeText={ (text: string) => { 
+                                                    if(!Number(+text)){
+                                                        setPricePerItem(null)
+                                                        return;
+                                                    }
+                                                    setPricePerItem(+text)
+                                                } }
+                                            />
                                         </Input>
                                     </VStack>
                                 </VStack>
@@ -116,7 +158,21 @@ export function ListGroceriesToday(){
                                     <Button
                                         action='positive'
                                         onPress={ () => {
+                                                const { collectionId, name, date, isOnNotification } = collectionGrocery;
                                                 setShowModal(false);
+                                                if(!groceryName || !detail || !quantity || !pricePerItem){
+                                                    return;
+                                                }
+                                                dispatch(addGroceryItem({ 
+                                                    collectionId, 
+                                                    collectionName: name,
+                                                    collectionDate: date,
+                                                    collectionIsOnNotification: isOnNotification,
+                                                    groceryName,
+                                                    detail,
+                                                    quantity,
+                                                    pricePerItem,
+                                                }));
                                                 toast.show({
                                                     placement: "top right",
                                                     render: ({ id }) => {
