@@ -58,7 +58,14 @@ export function CollectionsPage({ navigation }){
     const toast = useToast();
     // toast
 
+    const clearInput = () => {
+        setCollectionName(null);
+        setCollectionDate(dayjs().toDate());
+    }
+
     const dateFormat = "dddd, D MMM YY";
+
+    
 
     return (
         <VStack
@@ -159,11 +166,12 @@ export function CollectionsPage({ navigation }){
                                             })
                                             return;
                                         }
-                                        setShowModal(false);
                                         dispatch(addCollection({
                                             collectionName,
                                             collectionDate,
                                         }));
+                                        setShowModal(false);
+                                        clearInput();
                                         toast.show({
                                             placement: "top right",
                                             render: ({ id }) => {

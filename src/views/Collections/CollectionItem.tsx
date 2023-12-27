@@ -73,7 +73,7 @@ export default function CollectionItem({ route }){
                         dispatch(collectionItem.isOnNotification ? turnOffNotificationCollection({ collectionId }) : turnOnNotificationCollection({ collectionId }));
                     }}
                 >
-                    <ButtonText>Enable Notification Reminder </ButtonText>
+                    <ButtonText> { collectionItem.isOnNotification ? "Disable" : "Enable" } Notification Reminder </ButtonText>
                     <ButtonIcon as={ collectionItem.isOnNotification ? Bell : BellOff }/>
                 </Button>
                 

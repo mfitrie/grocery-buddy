@@ -53,16 +53,18 @@ export function ListGroceriesToday(){
     // -- modal input
     // modal
 
-
-
-
-
     // toast
     const toast = useToast();
     // toast
 
-    const insets = useSafeAreaInsets();
+    const clearInput = () => {
+        setGroceryName("");
+        setDetail("");
+        setQuantity(null);
+        setPricePerItem(null);
+    }
 
+    const insets = useSafeAreaInsets();
 
     return (
         <VStack
@@ -121,6 +123,7 @@ export function ListGroceriesToday(){
                                         <Input>
                                             <InputField 
                                                 type="text"
+                                                keyboardType='numeric'
                                                 placeholder='Enter quantity'
                                                 onChangeText={ (text: string) => { 
                                                     if(!Number(+text)){
@@ -139,6 +142,7 @@ export function ListGroceriesToday(){
                                         <Input>
                                             <InputField 
                                                 type="text" 
+                                                keyboardType='numeric'
                                                 placeholder='Enter price per item'
                                                 onChangeText={ (text: string) => { 
                                                     if(!Number(+text)){
@@ -189,6 +193,7 @@ export function ListGroceriesToday(){
                                                         pricePerItem,
                                                     }));
                                                     setShowModal(false);
+                                                    clearInput();
                                                     toast.show({
                                                         placement: "top right",
                                                         render: ({ id }) => {
