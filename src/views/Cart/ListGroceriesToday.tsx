@@ -35,34 +35,20 @@ import { GroceryItemType } from '../../types/grocery-item-type';
 import { useDispatch, useSelector } from 'react-redux';
 import { addGroceryItem, addGroceryQuantity, minusGroceryQuantity, tickCheckGroceryItem, tickAllGroceryItemAsDone } from '../../store/grocery';
 import { RootState } from '../../store/store';
+import { ModalAddGrocery } from '../../components/modal-add-grocery';
+
 
 export function ListGroceriesToday(){
-
     const { listGroceryCollection } = useSelector((state: RootState) => state.grocery);
     const collectionGrocery = listGroceryCollection[0];
-    const listGroceryItem = collectionGrocery.listGrocery;
+    // const listGrocery = collectionGrocery.listGrocery;
+    const { collectionId, name, date, isOnNotification, listGrocery } = collectionGrocery;
     const dispatch = useDispatch();
 
     // modal
     const [showModal, setShowModal] = useState<boolean>(false);
-    // -- modal input
-    const [groceryName, setGroceryName] = useState<string>("");
-    const [detail, setDetail] = useState<string>("");
-    const [quantity, setQuantity] = useState<number>(null);
-    const [pricePerItem, setPricePerItem] = useState<number>(null);
-    // -- modal input
     // modal
-
-    // toast
-    const toast = useToast();
-    // toast
-
-    const clearInput = () => {
-        setGroceryName("");
-        setDetail("");
-        setQuantity(null);
-        setPricePerItem(null);
-    }
+    
 
     const insets = useSafeAreaInsets();
 
@@ -71,165 +57,24 @@ export function ListGroceriesToday(){
             h="$full"
         >
             {
-                listGroceryItem.length !== 0 ? 
+                listGrocery.length !== 0 ? 
                 <>
-                    <Modal
-                        isOpen={showModal}
-                        onClose={() => {
-                            setShowModal(false);
-                        }}
-                    >
-                        <ModalBackdrop />
-                        <ModalContent>
-                            <ModalHeader>
-                                <VStack space="sm">
-                                    <Heading size="lg">Item information</Heading>
-                                </VStack>
-                            </ModalHeader>
-                            <ModalBody>
-                                <VStack space='xl'>
-                                    <VStack space='xs'>
-                                        <Text lineHeight="$lg">
-                                            Grocery Name
-                                        </Text>
-                                        <Input>
-                                            <InputField 
-                                                type="text" 
-                                                placeholder='Enter grocery name'
-                                                onChangeText={ (text: string) => { 
-                                                    setGroceryName(text)
-                                                } }
-                                            />
-                                        </Input>
-                                    </VStack>
-                                    <VStack space='xs'>
-                                        <Text lineHeight="$lg">
-                                            Detail
-                                        </Text>
-                                        <Input>
-                                            <InputField 
-                                                type="text" 
-                                                placeholder='Enter detail'
-                                                onChangeText={ (text: string) => { 
-                                                    setDetail(text)
-                                                } }
-                                            />
-                                        </Input>
-                                    </VStack>
-                                    <VStack space='xs'>
-                                        <Text lineHeight="$lg">
-                                            Quantity
-                                        </Text>
-                                        <Input>
-                                            <InputField 
-                                                type="text"
-                                                keyboardType='numeric'
-                                                placeholder='Enter quantity'
-                                                onChangeText={ (text: string) => { 
-                                                    if(!Number(+text)){
-                                                        setQuantity(null)
-                                                        return;
-                                                    }
-                                                    setQuantity(+text)
-                                                } }
-                                            />
-                                        </Input>
-                                    </VStack>
-                                    <VStack space='xs'>
-                                        <Text lineHeight="$lg">
-                                            Price Per Item (RM)
-                                        </Text>
-                                        <Input>
-                                            <InputField 
-                                                type="text" 
-                                                keyboardType='numeric'
-                                                placeholder='Enter price per item'
-                                                onChangeText={ (text: string) => { 
-                                                    if(!Number(+text)){
-                                                        setPricePerItem(null)
-                                                        return;
-                                                    }
-                                                    setPricePerItem(+text)
-                                                } }
-                                            />
-                                        </Input>
-                                    </VStack>
-                                </VStack>
-                            </ModalBody>
-                            <ModalFooter>
-                                <HStack
-                                    gap="$4"
-                                >
-                                    <Button
-                                        action='positive'
-                                        onPress={ () => {
-                                                    const { collectionId, name, date, isOnNotification } = collectionGrocery;
-                                                    if(!groceryName || !detail || !quantity || !pricePerItem){
-                                                        toast.show({
-                                                            placement: "top right",
-                                                            render: ({ id }) => {
-                                                            return (
-                                                                    <Toast nativeID={"toast-" + id} action="error" variant="accent">
-                                                                    <VStack space="xs">
-                                                                        <ToastTitle>Grocery</ToastTitle>
-                                                                        <ToastDescription>
-                                                                            Please fill up the input
-                                                                        </ToastDescription>
-                                                                    </VStack>
-                                                                    </Toast>
-                                                                )
-                                                            },
-                                                        });
-                                                        return;
-                                                    }
-                                                    dispatch(addGroceryItem({ 
-                                                        collectionId, 
-                                                        collectionName: name,
-                                                        collectionDate: date,
-                                                        collectionIsOnNotification: isOnNotification,
-                                                        groceryName,
-                                                        detail,
-                                                        quantity,
-                                                        pricePerItem,
-                                                    }));
-                                                    setShowModal(false);
-                                                    clearInput();
-                                                    toast.show({
-                                                        placement: "top right",
-                                                        render: ({ id }) => {
-                                                        return (
-                                                                <Toast nativeID={"toast-" + id} action="info" variant="accent">
-                                                                <VStack space="xs">
-                                                                    <ToastTitle>Grocery</ToastTitle>
-                                                                    <ToastDescription>
-                                                                        Save item successful
-                                                                    </ToastDescription>
-                                                                </VStack>
-                                                                </Toast>
-                                                            )
-                                                        },
-                                                    });
-                                                }
-                                        }
-                                    >
-                                            <ButtonText>Save</ButtonText>
-                                        </Button>
-                                    <Button
-                                        action='secondary'
-                                        onPress={ () => setShowModal(false) }
-                                    >
-                                        <ButtonText>Close</ButtonText>
-                                    </Button>
-                                </HStack>
-                            </ModalFooter>
-                        </ModalContent>
-                    </Modal>
+                    {
+                        <ModalAddGrocery
+                            isShowModal={ showModal }
+                            setShowModal={ setShowModal }
+                            collectionId={ collectionId }
+                            collectionName={ name }
+                            collectionDate={ date }
+                            collectionIsOnNotification={ isOnNotification }
+                        />
+                    }
 
                     <ScrollView
                         h="$4/6"
                     >
                         {
-                            listGroceryItem.map((item, index) => (
+                            listGrocery.map((item, index) => (
                                 <TodayGroceryItem 
                                     id={ item.id }
                                     addGroceryQuantity={ () => dispatch(addGroceryQuantity({ collectionId: collectionGrocery.collectionId, groceryId: item.id })) }
