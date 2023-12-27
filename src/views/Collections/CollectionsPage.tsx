@@ -26,16 +26,24 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TouchableOpacity } from 'react-native';
 import dayjs from 'dayjs';
-import { ShoppingCart, Bell, BellOff, Boxes } from "lucide-react-native";
+import { 
+    ShoppingCart, 
+    Bell, 
+    BellOff, 
+    Boxes,
+    CalendarDays,
+} from "lucide-react-native";
 import { useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { addCollection } from '../../store/grocery';
 
 export function CollectionsPage({ navigation }){
     const insets = useSafeAreaInsets();
     
     const { listGroceryCollection } = useSelector((state: RootState) => state.grocery);
+    const dispatch = useDispatch();
     const [showModal, setShowModal] = useState<boolean>(false);
     // date picker
     const [mode, setMode] = useState('date');
@@ -49,6 +57,8 @@ export function CollectionsPage({ navigation }){
     // toast
     const toast = useToast();
     // toast
+
+    const dateFormat = "dddd, D MMM YY";
 
     return (
         <VStack
@@ -93,13 +103,19 @@ export function CollectionsPage({ navigation }){
                                     <InputField 
                                         type="text" 
                                         placeholder='Enter collection date'
-                                        value={ dayjs(collectionDate).format("D/M/YYYY") }
+                                        value={ dayjs(collectionDate).format(dateFormat) }
                                     />
                                 </Input>
-                                <Button onPress={ () => {
-                                    setShow(true);
-                                } }>
+                                <Button
+                                    softShadow='1'
+                                    display='flex'
+                                    gap="$1"
+                                    onPress={ () => {
+                                        setShow(true);
+                                    } }
+                                >
                                     <ButtonText>Open Date Picker</ButtonText>
+                                    <ButtonIcon as={ CalendarDays }/>
                                 </Button>
                                 {
                                     show && (
@@ -144,6 +160,10 @@ export function CollectionsPage({ navigation }){
                                             return;
                                         }
                                         setShowModal(false);
+                                        dispatch(addCollection({
+                                            collectionName,
+                                            collectionDate,
+                                        }));
                                         toast.show({
                                             placement: "top right",
                                             render: ({ id }) => {
@@ -196,7 +216,7 @@ export function CollectionsPage({ navigation }){
                                     w="$3/6"
                                 >
                                     <Heading>{ item.name }</Heading>
-                                    <Text>{ dayjs(item.date).format("dddd, D MMM YY") }</Text>
+                                    <Text>{ dayjs(item.date).format(dateFormat) }</Text>
                                 </VStack>
                                 <HStack
                                     alignItems='center'

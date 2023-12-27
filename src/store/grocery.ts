@@ -10,6 +10,10 @@ interface RemoveGroceryItemActionType {
   groceryId: string,
 }
 
+interface AddCollectionType {
+  collectionName: string,
+  collectionDate: Date,
+}
 interface AddGroceryItemType extends Omit<RemoveGroceryItemActionType, "groceryId">{
   collectionName: string,
   collectionDate: Date,
@@ -80,6 +84,19 @@ const grocerySlice = createSlice({
   reducers: {
     initGroceryCollection: (state, action) => {
       state.listGroceryCollection = action.payload;
+    },
+    addCollection: (state, action: PayloadAction<AddCollectionType>) => {
+      const { collectionName, collectionDate } = action.payload;
+      const newCollection: CollectionGroceryType  = {
+        collectionId: faker.database.mongodbObjectId(),
+        name: collectionName,
+        date: collectionDate,
+        isOnNotification: false,
+        listGrocery: [],
+      }
+
+      state.listGroceryCollection.push(newCollection);
+
     },
     addGroceryItem: (state, action: PayloadAction<AddGroceryItemType>) => {
       const { 
@@ -291,6 +308,7 @@ function handleAddAndMinusQuantityInItem(
 
 export const { 
   initGroceryCollection, 
+  addCollection,
   addGroceryItem,
   removeGroceryItemFromCollection, 
   addGroceryQuantity, 

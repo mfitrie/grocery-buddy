@@ -159,36 +159,51 @@ export function ListGroceriesToday(){
                                     <Button
                                         action='positive'
                                         onPress={ () => {
-                                                const { collectionId, name, date, isOnNotification } = collectionGrocery;
-                                                setShowModal(false);
-                                                if(!groceryName || !detail || !quantity || !pricePerItem){
-                                                    return;
-                                                }
-                                                dispatch(addGroceryItem({ 
-                                                    collectionId, 
-                                                    collectionName: name,
-                                                    collectionDate: date,
-                                                    collectionIsOnNotification: isOnNotification,
-                                                    groceryName,
-                                                    detail,
-                                                    quantity,
-                                                    pricePerItem,
-                                                }));
-                                                toast.show({
-                                                    placement: "top right",
-                                                    render: ({ id }) => {
-                                                    return (
-                                                        <Toast nativeID={"toast-" + id} action="info" variant="accent">
-                                                        <VStack space="xs">
-                                                            <ToastTitle>Grocery</ToastTitle>
-                                                            <ToastDescription>
-                                                                Save item successful
-                                                            </ToastDescription>
-                                                        </VStack>
-                                                        </Toast>
-                                                    )
-                                                    },
-                                                })
+                                                    const { collectionId, name, date, isOnNotification } = collectionGrocery;
+                                                    if(!groceryName || !detail || !quantity || !pricePerItem){
+                                                        toast.show({
+                                                            placement: "top right",
+                                                            render: ({ id }) => {
+                                                            return (
+                                                                    <Toast nativeID={"toast-" + id} action="error" variant="accent">
+                                                                    <VStack space="xs">
+                                                                        <ToastTitle>Grocery</ToastTitle>
+                                                                        <ToastDescription>
+                                                                            Please fill up the input
+                                                                        </ToastDescription>
+                                                                    </VStack>
+                                                                    </Toast>
+                                                                )
+                                                            },
+                                                        });
+                                                        return;
+                                                    }
+                                                    dispatch(addGroceryItem({ 
+                                                        collectionId, 
+                                                        collectionName: name,
+                                                        collectionDate: date,
+                                                        collectionIsOnNotification: isOnNotification,
+                                                        groceryName,
+                                                        detail,
+                                                        quantity,
+                                                        pricePerItem,
+                                                    }));
+                                                    setShowModal(false);
+                                                    toast.show({
+                                                        placement: "top right",
+                                                        render: ({ id }) => {
+                                                        return (
+                                                                <Toast nativeID={"toast-" + id} action="info" variant="accent">
+                                                                <VStack space="xs">
+                                                                    <ToastTitle>Grocery</ToastTitle>
+                                                                    <ToastDescription>
+                                                                        Save item successful
+                                                                    </ToastDescription>
+                                                                </VStack>
+                                                                </Toast>
+                                                            )
+                                                        },
+                                                    });
                                                 }
                                         }
                                     >
@@ -218,12 +233,12 @@ export function ListGroceriesToday(){
                                     name={ item.name }
                                     detail={ item.detail }
                                     groceryImageUri={ item.groceryImageUri }
-                                    quantity={item.quantity}
+                                    quantity={ item.quantity }
                                     pricePerItem={ item.pricePerItem }
                                     totalPricePerItem={ item.totalPricePerItem }
-                                    isCheck={item.isCheck}
+                                    isCheck={ item.isCheck }
                                     isHaveDeleteButton={ false }
-                                    key={index}
+                                    key={ index }
                                 />    
                             ))
                         }
