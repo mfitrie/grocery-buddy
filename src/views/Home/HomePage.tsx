@@ -37,7 +37,7 @@ export function HomePage({ navigation }){
                     justifyContent="space-around" 
                     alignItems="center"
                 >
-                    <Text size="3xl" bold="true">{ listGroceryCollection.length }</Text>
+                    <Text size="3xl" bold="true">{ listGroceryCollection.length ?? 0 }</Text>
                     <Text size="2xl">Collections</Text>
                     <Ionicons name="albums-outline" size={30} color="#000"/>
                 </HStack>
@@ -50,7 +50,7 @@ export function HomePage({ navigation }){
                     justifyContent="space-around" 
                     alignItems="center"
                 >
-                    <Text size="3xl" bold="true">{ listGroceryCollection[0].listGrocery.length }</Text>
+                    <Text size="3xl" bold="true">{ listGroceryCollection[0]?.listGrocery?.length ?? 0 }</Text>
                     <Text size="2xl">Grocery Item</Text>
                     <Ionicons name="cart-outline" size={30} color="#000"/>
                 </HStack>

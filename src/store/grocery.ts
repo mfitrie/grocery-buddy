@@ -9,6 +9,7 @@ interface RemoveGroceryItemActionType {
   collectionId: string,
   groceryId: string,
 }
+interface RemoveCollectionType extends Omit<RemoveGroceryItemActionType, "groceryId">{}
 
 interface AddCollectionType {
   collectionName: string,
@@ -141,6 +142,11 @@ const grocerySlice = createSlice({
 
         return item;
       });
+
+    },
+    removeCollection: (state, action: PayloadAction<RemoveCollectionType>) => {
+      const { collectionId } = action.payload;
+      state.listGroceryCollection = state.listGroceryCollection.filter(item => item.collectionId !== collectionId);
 
     },
     removeGroceryItemFromCollection: (state, action: PayloadAction<RemoveGroceryItemActionType>) => {
@@ -310,6 +316,7 @@ export const {
   initGroceryCollection, 
   addCollection,
   addGroceryItem,
+  removeCollection,
   removeGroceryItemFromCollection, 
   addGroceryQuantity, 
   minusGroceryQuantity,
