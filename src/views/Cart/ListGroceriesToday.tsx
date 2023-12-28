@@ -41,7 +41,7 @@ import { ModalAddGrocery } from '../../components/modal-add-grocery';
 export function ListGroceriesToday(){
     const { listGroceryCollection } = useSelector((state: RootState) => state.grocery);
     const collectionGrocery = listGroceryCollection[0];
-    const { collectionId, name, date, isOnNotification, listGrocery } = collectionGrocery;
+    
     const dispatch = useDispatch();
 
     // modal
@@ -56,16 +56,16 @@ export function ListGroceriesToday(){
             h="$full"
         >
             {
-                listGrocery?.length !== 0 ? 
+                collectionGrocery && collectionGrocery.listGrocery.length !== 0 ? 
                 <>
                     {
                         <ModalAddGrocery
                             isShowModal={ showModal }
                             setShowModal={ setShowModal }
-                            collectionId={ collectionId }
-                            collectionName={ name }
-                            collectionDate={ date }
-                            collectionIsOnNotification={ isOnNotification }
+                            collectionId={ collectionGrocery.collectionId }
+                            collectionName={ collectionGrocery.name }
+                            collectionDate={ collectionGrocery.date }
+                            collectionIsOnNotification={ collectionGrocery.isOnNotification }
                         />
                     }
 
@@ -73,7 +73,7 @@ export function ListGroceriesToday(){
                         h="$4/6"
                     >
                         {
-                            listGrocery.map((item, index) => (
+                            collectionGrocery.listGrocery.map((item, index) => (
                                 <TodayGroceryItem 
                                     id={ item.id }
                                     addGroceryQuantity={ () => dispatch(addGroceryQuantity({ collectionId: collectionGrocery.collectionId, groceryId: item.id })) }

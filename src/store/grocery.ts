@@ -30,7 +30,7 @@ interface TickCheckGroceryItemActionType extends RemoveGroceryItemActionType{}
 interface TickAllkGroceryItemDoneActionType extends Omit<RemoveGroceryItemActionType, "groceryId">{}
 
 // init dummy listCollectionGroceries
-const dummyCollectionGrocery: CollectionGroceryType[] = Array(10).fill(null).map(item => {
+const dummyCollectionGrocery: CollectionGroceryType[] = Array(5).fill(null).map(item => {
   return {
       collectionId: faker.database.mongodbObjectId(),
       name: faker.word.words(2),
@@ -58,27 +58,6 @@ const dummyCollectionGrocery: CollectionGroceryType[] = Array(10).fill(null).map
 const grocerySlice = createSlice({
   name: "message",
   initialState: {
-    // listGroceryItem: [
-    //     {
-    //         collectionId: "12345",
-    //         name: "test one",
-    //         date: new Date(),
-    //         isOnNotification: false,
-    //         listGrocery: [
-    //             {
-    //                 id: "123",
-    //                 name: "john",
-    //                 detail: "lorem",
-    //                 groceryImageUri: "http://loremipsum",
-    //                 quantity: 12,
-    //                 date: new Date(),
-    //                 pricePerItem: 12,
-    //                 totalPricePerItem: 12,
-    //                 isCheck: false,
-    //             },
-    //         ],
-    //     },
-    // ]
     listGroceryCollection: dummyCollectionGrocery,
 
   },

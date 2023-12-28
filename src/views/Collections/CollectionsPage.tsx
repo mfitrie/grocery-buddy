@@ -202,49 +202,66 @@ export function CollectionsPage({ navigation }){
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-            <ScrollView
-                h="$5/6"
-            >
-                {
-                    listGroceryCollection.map(item => (
-                        <TouchableOpacity
-                            key={ item.collectionId }
-                            onPress={() => navigation.push("CollectionItem", { collectionId: item.collectionId })}
-                        >
-                            <HStack
-                                maxHeight="$56"
-                                justifyContent='space-between'
-                                alignItems='center'
-                                py="$4"
-                                px="$2"
-                                bg='#fff'
-                                borderBottomWidth="$1"
+            {
+                listGroceryCollection.length !== 0 ? 
+                <ScrollView
+                    h="$5/6"
+                >
+                    {
+                        listGroceryCollection.map(item => (
+                            <TouchableOpacity
+                                key={ item.collectionId }
+                                onPress={() => navigation.push("CollectionItem", { collectionId: item.collectionId })}
                             >
-                                <VStack
-                                    w="$3/6"
-                                >
-                                    <Heading>{ item.name }</Heading>
-                                    <Text>{ dayjs(item.date).format(dateFormat) }</Text>
-                                </VStack>
                                 <HStack
+                                    maxHeight="$56"
+                                    justifyContent='space-between'
                                     alignItems='center'
-                                    alignSelf='flex-end'
+                                    py="$4"
+                                    px="$2"
+                                    bg='#fff'
+                                    borderBottomWidth="$1"
                                 >
-                                    <Text>Quantity</Text>
-                                    <Icon as={ ShoppingCart } size='md' mr="$2"/>
-                                    <Text>{ item.listGrocery.length }</Text>
+                                    <VStack
+                                        w="$3/6"
+                                    >
+                                        <Heading>{ item.name }</Heading>
+                                        <Text>{ dayjs(item.date).format(dateFormat) }</Text>
+                                    </VStack>
+                                    <HStack
+                                        alignItems='center'
+                                        alignSelf='flex-end'
+                                    >
+                                        <Text>Quantity</Text>
+                                        <Icon as={ ShoppingCart } size='md' mr="$2"/>
+                                        <Text>{ item.listGrocery.length }</Text>
+                                    </HStack>
+                                    {
+                                        <Icon
+                                            as={ item.isOnNotification ? Bell : BellOff}
+                                            size='xl'
+                                        />
+                                    }
                                 </HStack>
-                                {
-                                    <Icon
-                                        as={ item.isOnNotification ? Bell : BellOff}
-                                        size='xl'
-                                    />
-                                }
-                            </HStack>
-                        </TouchableOpacity>
-                    ))
-                }
-            </ScrollView>
+                            </TouchableOpacity>
+                        ))
+                        
+                    }
+                </ScrollView>
+                :
+                <VStack
+                    bgColor='$coolGray300'
+                    h="$5/6"
+                    mx="$10"
+                    alignItems='center'
+                    justifyContent='center'
+                    borderRadius="$lg"
+                    hardShadow='1'
+                >
+                    <Text bold='true' size='lg'>No list groceries for today</Text>
+                </VStack>
+
+            }
             <VStack
                 h="$1/6"
                 px="$4"
