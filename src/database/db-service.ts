@@ -42,21 +42,19 @@ export const initCreateTable = async (): Promise<void> => {
                 FOREIGN KEY (collectionId) REFERENCES ${collectionTableName}(collectionId) ON UPDATE CASCADE ON DELETE CASCADE
             );
         `;
-        // const queryInsertDummyDataToCollectionTable = `
-        //     INSERT OR IGNORE INTO ${collectionTableName} (collectionId, name, date, isOnNotification)
-        //     VALUES ('defaultCollection', 'Default Collection', '2023-01-01', 0);
+        // const queryDeleteGroceriesItem = `
+        //     DELETE FROM ${groceryTableName};
         // `;
-        // const queryInsertDummyDataToGroceryItemTable = `
-        //     INSERT OR IGNORE INTO ${groceryTableName} (id, name, detail, groceryImageUri, quantity, pricePerItem, totalPricePerItem, isCheck, collectionId)
-        //     VALUES ('defaultGroceryItemId', 'Default Grocery Item', 'Default Detail', '', 0, 0.0, 0.0, 0, 'defaultCollection');
-        // `
+        // const queryDeleteCollectionItem = `
+        //     DELETE FROM ${collectionTableName};    
+        // `;
     
         await db.transactionAsync(async tx => {
             await tx.executeSqlAsync(queryPragmaOn, []);
             await tx.executeSqlAsync(queryCreateCollectionTable, []);
             await tx.executeSqlAsync(queryCreateGroceryItemTable, []);
-            // await tx.executeSqlAsync(queryInsertDummyDataToCollectionTable, []);
-            // await tx.executeSqlAsync(queryInsertDummyDataToGroceryItemTable, []);
+            // await tx.executeSqlAsync(queryDeleteGroceriesItem, []);
+            // await tx.executeSqlAsync(queryDeleteCollectionItem, []);
         });
         
     } catch (error) {
@@ -141,6 +139,9 @@ export const getAllGroceryItem = async (): Promise<GroceryItemType[]> => {
         return [];
     }
 }
+
+
+// TODO: make get all collection and grocery item with join
 
 
 // TODO: make add db collection

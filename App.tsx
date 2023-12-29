@@ -32,7 +32,7 @@ import { faker } from "@faker-js/faker";
 import { CollectionGroceryType } from "./src/types/collection-grocery-type";
 import { initGroceryCollection } from "./src/store/grocery";
 import { initCreateTable, getAllCollection, getAllGroceryItem, seedDBGrocery } from "./src/database/db-service";
-
+import { logger } from "./src/utils/logger";
 
 export default function App() {
   useEffect(() => {
@@ -42,11 +42,15 @@ export default function App() {
       const collections = await getAllCollection();
       const groceries = await getAllGroceryItem();
       
-      console.log(collections);
-      console.log(groceries);
+      logger.info(collections);
+      logger.info(groceries);
 
     })();
   }, []);
+
+  // TODO: init data from db and set the redux listGroceryCollection
+
+
 
   return (
     <Provider store={ store }>
