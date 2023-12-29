@@ -30,8 +30,8 @@ import { ListGroceriesToday } from "./src/views/Cart/ListGroceriesToday";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { faker } from "@faker-js/faker";
 import { CollectionGroceryType } from "./src/types/collection-grocery-type";
-import { initGroceryCollection } from "./src/store/grocery";
-import { initCreateTable, getAllCollection, getAllGroceryItem, seedDBGrocery } from "./src/database/db-service";
+import { addGroceryItem, initGroceryCollection } from "./src/store/grocery";
+import { initCreateTable, getAllCollection, getAllGroceryItem, seedDBGrocery, getAllCollectionWithGrocery, dbAddGroceryItem } from "./src/database/db-service";
 import { logger } from "./src/utils/logger";
 
 export default function App() {
@@ -41,9 +41,13 @@ export default function App() {
       await seedDBGrocery();
       const collections = await getAllCollection();
       const groceries = await getAllGroceryItem();
+      const collectionWithGrocery = await getAllCollectionWithGrocery();
+      // await dbAddGroceryItem("defaultCollection-0");
       
-      logger.info(collections);
-      logger.info(groceries);
+      logger.info("collections: ", collections);
+      logger.info("groceries: ", groceries);
+      logger.info("collectionWithGrocery: ", collectionWithGrocery);
+      // logger.info("collectionWithGrocery: ", JSON.parse(collectionWithGrocery[0].listGrocery)[0].detail);
 
     })();
   }, []);

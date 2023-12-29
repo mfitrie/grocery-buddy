@@ -79,10 +79,12 @@ export const seedDBGrocery = async (): Promise<void> => {
         //seed grocery
         await db.transactionAsync(async tx => {
             for(let i=0; i<5; i++){
-                await tx.executeSqlAsync(`
-                    INSERT OR IGNORE INTO ${groceryTableName} (id, name, detail, groceryImageUri, quantity, pricePerItem, totalPricePerItem, isCheck, collectionId)
-                    VALUES ('defaultGroceryItemId-${i}', '${faker.word.words(2)}', '${faker.word.words(10)}', '${faker.image.urlLoremFlickr({ category: 'food' })}', 0, 0.0, 0.0, 0, 'defaultCollection-${i}');
-                `);
+                for(let j=0; j<3; j++){
+                    await tx.executeSqlAsync(`
+                        INSERT OR IGNORE INTO ${groceryTableName} (id, name, detail, groceryImageUri, quantity, pricePerItem, totalPricePerItem, isCheck, collectionId)
+                        VALUES ('defaultGroceryItemId-${j}', '${faker.word.words(2)}', '${faker.word.words(10)}', '${faker.image.urlLoremFlickr({ category: 'food' })}', 0, 0.0, 0.0, 0, 'defaultCollection-${i}');
+                    `);
+                }
             }
         });
         
@@ -92,7 +94,7 @@ export const seedDBGrocery = async (): Promise<void> => {
 }
 
 
-export const getAllCollection = async (): Promise<CollectionGroceryType[]> => {
+export const getAllCollection = async (): Promise<Omit<CollectionGroceryType, "listGrocery">[]> => {
     try {
         const db = SQLite.openDatabase(databaseFileName);
         // PRAGMA table_info(CollectionGrocery)
@@ -100,13 +102,11 @@ export const getAllCollection = async (): Promise<CollectionGroceryType[]> => {
         const query = `
             SELECT * from ${collectionTableName}
         `;
-        const resultsDB = [];
+        let resultsDB = [];
         await db.transactionAsync(async tx => {
             const results = await tx.executeSqlAsync(query, []);
             // console.log("Data grocery: ", results.rows);
-            results.rows.forEach(item => {
-                resultsDB.push(item);
-            });
+            resultsDB = results.rows;
         });
 
         return resultsDB;
@@ -123,13 +123,11 @@ export const getAllGroceryItem = async (): Promise<GroceryItemType[]> => {
         const query = `
             SELECT * from ${groceryTableName}
         `;
-        const resultsDB = [];
+        let resultsDB = [];
         await db.transactionAsync(async tx => {
             const results = await tx.executeSqlAsync(query, []);
             // console.log("Data collection: ", results.rows);
-            results.rows.forEach(item => {
-                resultsDB.push(item);
-            });
+            resultsDB = results.rows;
         });
 
         return resultsDB;
@@ -142,7 +140,51 @@ export const getAllGroceryItem = async (): Promise<GroceryItemType[]> => {
 
 
 // TODO: make get all collection and grocery item with join
+export const getAllCollectionWithGrocery = async (): Promise<CollectionGroceryType[]> => {
+    try {
+        const db = SQLite.openDatabase(databaseFileName);
+        const query = `
+            SELECT
+                CollectionGrocery.collectionId,
+                CollectionGrocery.name AS collectionName,
+                CollectionGrocery.date,
+                CollectionGrocery.isOnNotification,
+                '[' ||
+                    GROUP_CONCAT(
+                    '{' ||
+                        '"id":"' || GroceryItem.id || '",' ||
+                        '"name":"' || GroceryItem.name || '",' ||
+                        '"detail":"' || GroceryItem.detail || '",' ||
+                        '"groceryImageUri":"' || GroceryItem.groceryImageUri || '",' ||
+                        '"quantity":' || GroceryItem.quantity || ',' ||
+                        '"pricePerItem":' || GroceryItem.pricePerItem || ',' ||
+                        '"totalPricePerItem":' || GroceryItem.totalPricePerItem || ',' ||
+                        '"isCheck":' || GroceryItem.isCheck || ',' ||
+                        '"collectionId":"' || GroceryItem.collectionId || '"' ||
+                    '}'
+                    , ',') ||
+                ']' AS listGrocery
+            FROM
+                CollectionGrocery
+            LEFT JOIN
+                GroceryItem ON CollectionGrocery.collectionId = GroceryItem.collectionId
+            GROUP BY
+                CollectionGrocery.collectionId;
+        `;
+        let resultsDB = [];
+        await db.transactionAsync(async tx => {
+            const results = await tx.executeSqlAsync(query, []);
+            // console.log("Data collection: ", results.rows);
+            resultsDB = results.rows;
+        });
 
+        return resultsDB;
+
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}
 
 // TODO: make add db collection
 // TODO: update collection item
@@ -150,5 +192,31 @@ export const getAllGroceryItem = async (): Promise<GroceryItemType[]> => {
 
 
 // TODO: make add db grocery
+export const dbAddGroceryItem = async ({
+    collectionId,
+    id,
+    name,
+    detail,
+    groceryImageUri,
+    quantity,
+    pricePerItem,
+    totalPricePerItem,
+    isCheck,
+} : GroceryItemType): Promise<void> => {
+    try {
+        const db = SQLite.openDatabase(databaseFileName);
+        const query = `
+            INSERT INTO ${groceryTableName} (id, name, detail, groceryImageUri, quantity, pricePerItem, totalPricePerItem, isCheck, collectionId)
+            VALUES ('defaultGroceryItemId-${1}', '${faker.word.words(2)}', '${faker.word.words(10)}', '${faker.image.urlLoremFlickr({ category: 'food' })}', 0, 0.0, 0.0, 0, '${collectionId}');
+        `;
+        await db.transactionAsync(async tx => {
+            const results = await tx.executeSqlAsync(query, []);
+            console.log(results.rows);
+        });
+
+    } catch (error) {
+        console.error(error);
+    }
+}
 // TODO: delete grocery item
 // TODO: delete grocery item
