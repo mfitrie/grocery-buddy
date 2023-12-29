@@ -4,8 +4,8 @@ export interface GroceryItemType{
     detail: string,
     groceryImageUri: string,
     quantity: number,
-    date: Date,
     pricePerItem: number,
     totalPricePerItem: number
     isCheck: boolean,
+    collectionId: string,
 }

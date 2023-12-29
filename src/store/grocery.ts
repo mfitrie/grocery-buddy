@@ -31,8 +31,9 @@ interface TickAllkGroceryItemDoneActionType extends Omit<RemoveGroceryItemAction
 
 // init dummy listCollectionGroceries
 const dummyCollectionGrocery: CollectionGroceryType[] = Array(5).fill(null).map(item => {
+  const collectionId = faker.database.mongodbObjectId();
   return {
-      collectionId: faker.database.mongodbObjectId(),
+      collectionId,
       name: faker.word.words(2),
       date: faker.date.anytime(),
       isOnNotification: faker.datatype.boolean(),
@@ -44,10 +45,10 @@ const dummyCollectionGrocery: CollectionGroceryType[] = Array(5).fill(null).map(
               detail: faker.word.words(10),
               groceryImageUri: faker.image.urlLoremFlickr({ category: 'food' }),
               quantity: 1,
-              date: faker.date.anytime(),
               pricePerItem,
               totalPricePerItem: pricePerItem,
               isCheck: faker.datatype.boolean(),
+              collectionId, 
           }
       }),
   }
@@ -101,10 +102,10 @@ const grocerySlice = createSlice({
         detail,
         quantity,
         pricePerItem,
-        date: null,
         groceryImageUri: faker.image.urlLoremFlickr({ category: 'food' }),
         isCheck: false,
         totalPricePerItem: pricePerItem * quantity,
+        collectionId,
       });
 
       state.listGroceryCollection = state.listGroceryCollection
