@@ -146,7 +146,7 @@ export const getAllCollectionWithGrocery = async (): Promise<CollectionGroceryTy
         const query = `
             SELECT
                 CollectionGrocery.collectionId,
-                CollectionGrocery.name AS collectionName,
+                CollectionGrocery.name,
                 CollectionGrocery.date,
                 CollectionGrocery.isOnNotification,
                 '[' ||
@@ -174,11 +174,17 @@ export const getAllCollectionWithGrocery = async (): Promise<CollectionGroceryTy
         let resultsDB = [];
         await db.transactionAsync(async tx => {
             const results = await tx.executeSqlAsync(query, []);
-            // console.log("Data collection: ", results.rows);
             resultsDB = results.rows;
         });
 
-        return resultsDB;
+        return resultsDB.map((item: CollectionGroceryType) => {
+            const listGrocery = typeof item.listGrocery === 'string' ? JSON.parse(item.listGrocery) : item.listGrocery;
+
+            return {
+                ...item,
+                listGrocery,
+            }
+        });
 
     } catch (error) {
         console.error(error);

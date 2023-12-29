@@ -35,6 +35,8 @@ import { initCreateTable, getAllCollection, getAllGroceryItem, seedDBGrocery, ge
 import { logger } from "./src/utils/logger";
 
 export default function App() {
+  // const dispatch = useDispatch();
+
   useEffect(() => {
     (async () => {
       await initCreateTable();
@@ -42,13 +44,12 @@ export default function App() {
       const collections = await getAllCollection();
       const groceries = await getAllGroceryItem();
       const collectionWithGrocery = await getAllCollectionWithGrocery();
-      // await dbAddGroceryItem("defaultCollection-0");
+      
+      // dispatch(initGroceryCollection(collectionWithGrocery));
       
       logger.info("collections: ", collections);
       logger.info("groceries: ", groceries);
       logger.info("collectionWithGrocery: ", collectionWithGrocery);
-      // logger.info("collectionWithGrocery: ", JSON.parse(collectionWithGrocery[0].listGrocery)[0].detail);
-
     })();
   }, []);
 
