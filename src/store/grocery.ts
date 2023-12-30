@@ -3,7 +3,7 @@ import { CollectionGroceryType } from "../types/collection-grocery-type";
 import { GroceryItemType } from "../types/grocery-item-type";
 import { faker } from "@faker-js/faker";
 import dayjs from "dayjs";
-
+import { groceryBuddyApi } from "./api";
 
 interface RemoveGroceryItemActionType {
   collectionId: string,
@@ -29,37 +29,37 @@ interface AddGroceryItemActionType extends RemoveGroceryItemActionType{}
 interface TickCheckGroceryItemActionType extends RemoveGroceryItemActionType{}
 interface TickAllkGroceryItemDoneActionType extends Omit<RemoveGroceryItemActionType, "groceryId">{}
 
-// init dummy listCollectionGroceries
-const dummyCollectionGrocery: CollectionGroceryType[] = Array(5).fill(null).map(item => {
-  const collectionId = faker.database.mongodbObjectId();
-  return {
-      collectionId,
-      name: faker.word.words(2),
-      date: faker.date.anytime(),
-      isOnNotification: faker.datatype.boolean(),
-      listGrocery: Array(10).fill(null).map(itemTwo => {
-          const pricePerItem = +faker.commerce.price({ max: 50 });
-          return {
-              id: faker.database.mongodbObjectId(),
-              name: faker.word.words(2),
-              detail: faker.word.words(10),
-              groceryImageUri: faker.image.urlLoremFlickr({ category: 'food' }),
-              quantity: 1,
-              pricePerItem,
-              totalPricePerItem: pricePerItem,
-              isCheck: faker.datatype.boolean(),
-              collectionId, 
-          }
-      }),
-  }
+// // init dummy listCollectionGroceries
+// const dummyCollectionGrocery: CollectionGroceryType[] = Array(5).fill(null).map(item => {
+//   const collectionId = faker.database.mongodbObjectId();
+//   return {
+//       collectionId,
+//       name: faker.word.words(2),
+//       date: faker.date.anytime(),
+//       isOnNotification: faker.datatype.boolean(),
+//       listGrocery: Array(10).fill(null).map(itemTwo => {
+//           const pricePerItem = +faker.commerce.price({ max: 50 });
+//           return {
+//               id: faker.database.mongodbObjectId(),
+//               name: faker.word.words(2),
+//               detail: faker.word.words(10),
+//               groceryImageUri: faker.image.urlLoremFlickr({ category: 'food' }),
+//               quantity: 1,
+//               pricePerItem,
+//               totalPricePerItem: pricePerItem,
+//               isCheck: faker.datatype.boolean(),
+//               collectionId, 
+//           }
+//       }),
+//   }
 
-});
+// });
 
 
 const grocerySlice = createSlice({
   name: "message",
   initialState: {
-    listGroceryCollection: dummyCollectionGrocery,
+    listGroceryCollection: [],
 
   },
   reducers: {
@@ -265,7 +265,12 @@ const grocerySlice = createSlice({
     // incrementByAmount: (state, action) => {
     //   state.value += action.payload;
     // }
-  }
+  },
+  // extraReducers(builder) {
+  //     builder.addMatcher(groceryBuddyApi.endpoints.getAllCollectionWithGrocery.matchFulfilled, (state, action) => {
+  //       state.listGroceryCollection = action.payload;
+  //     });
+  // },
 });
 
 

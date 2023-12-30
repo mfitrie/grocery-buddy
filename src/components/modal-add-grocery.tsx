@@ -21,7 +21,8 @@ import {
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addGroceryItem } from "../store/grocery";
-
+import { dbAddGroceryItem } from "../database/db-service";
+import { faker } from "@faker-js/faker";
 
 type propsModalAddGrocery = {
     isShowModal: boolean,
@@ -167,6 +168,20 @@ export function ModalAddGrocery({
                                         });
                                         return;
                                     }
+
+                                    const totalPricePerItem = pricePerItem * quantity;
+                                    dbAddGroceryItem({
+                                        id: faker.database.mongodbObjectId(),
+                                        name: groceryName,
+                                        detail,
+                                        groceryImageUri: faker.image.urlLoremFlickr({ category: "food" }),
+                                        quantity,
+                                        pricePerItem,
+                                        totalPricePerItem: totalPricePerItem,
+                                        isCheck: false,
+                                        collectionId,
+                                    })
+
                                     dispatch(addGroceryItem({ 
                                         collectionId, 
                                         collectionName,
@@ -177,6 +192,7 @@ export function ModalAddGrocery({
                                         quantity,
                                         pricePerItem,
                                     }));
+
                                     setShowModal(false);
                                     clearInput();
                                     toast.show({

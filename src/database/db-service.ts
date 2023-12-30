@@ -182,7 +182,7 @@ export const getAllCollectionWithGrocery = async (): Promise<CollectionGroceryTy
 
             return {
                 ...item,
-                listGrocery,
+                listGrocery: listGrocery ?? [],
             }
         });
 
@@ -211,13 +211,24 @@ export const dbAddGroceryItem = async ({
 } : GroceryItemType): Promise<void> => {
     try {
         const db = SQLite.openDatabase(databaseFileName);
+        // VALUES ('defaultGroceryItemId-${1}', '${faker.word.words(2)}', '${faker.word.words(10)}', '${faker.image.urlLoremFlickr({ category: 'food' })}', 0, 0.0, 0.0, 0, '${collectionId}');
         const query = `
             INSERT INTO ${groceryTableName} (id, name, detail, groceryImageUri, quantity, pricePerItem, totalPricePerItem, isCheck, collectionId)
-            VALUES ('defaultGroceryItemId-${1}', '${faker.word.words(2)}', '${faker.word.words(10)}', '${faker.image.urlLoremFlickr({ category: 'food' })}', 0, 0.0, 0.0, 0, '${collectionId}');
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
         `;
         await db.transactionAsync(async tx => {
-            const results = await tx.executeSqlAsync(query, []);
-            console.log(results.rows);
+            const results = await tx.executeSqlAsync(query, [
+                id,
+                name, 
+                detail, 
+                groceryImageUri, 
+                quantity, 
+                pricePerItem,
+                totalPricePerItem,
+                isCheck ? 1 : 0,
+                collectionId,
+            ]);
+            console.log("dbAddGroceryItem: ", results.rowsAffected);
         });
 
     } catch (error) {

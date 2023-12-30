@@ -35,28 +35,6 @@ import { initCreateTable, getAllCollection, getAllGroceryItem, seedDBGrocery, ge
 import { logger } from "./src/utils/logger";
 
 export default function App() {
-  // const dispatch = useDispatch();
-
-  useEffect(() => {
-    (async () => {
-      await initCreateTable();
-      await seedDBGrocery();
-      const collections = await getAllCollection();
-      const groceries = await getAllGroceryItem();
-      const collectionWithGrocery = await getAllCollectionWithGrocery();
-      
-      // dispatch(initGroceryCollection(collectionWithGrocery));
-      
-      logger.info("collections: ", collections);
-      logger.info("groceries: ", groceries);
-      logger.info("collectionWithGrocery: ", collectionWithGrocery);
-    })();
-  }, []);
-
-  // TODO: init data from db and set the redux listGroceryCollection
-
-
-
   return (
     <Provider store={ store }>
       <GluestackUIProvider config={config.theme}>

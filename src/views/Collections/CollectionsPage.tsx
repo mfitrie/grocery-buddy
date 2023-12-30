@@ -203,7 +203,7 @@ export function CollectionsPage({ navigation }){
                 </ModalContent>
             </Modal>
             {
-                listGroceryCollection.length !== 0 ? 
+                listGroceryCollection?.length !== 0 ? 
                 <ScrollView
                     h="$5/6"
                 >

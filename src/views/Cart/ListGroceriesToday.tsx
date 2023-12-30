@@ -27,7 +27,7 @@ import {
 } from "@gluestack-ui/themed";
 import { Checkbox } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { CheckSquare, PlusSquare } from "lucide-react-native";
 import LottieView from 'lottie-react-native';
 import { TodayGroceryItem } from '../../components/today-grocery-item';
@@ -47,9 +47,9 @@ export function ListGroceriesToday(){
     // modal
     const [showModal, setShowModal] = useState<boolean>(false);
     // modal
-    
 
     const insets = useSafeAreaInsets();
+
 
     return (
         <VStack
