@@ -3,6 +3,7 @@ import { Pressable, TouchableOpacity } from "react-native";
 import { Checkbox } from 'react-native-paper';
 import { Pencil, PlusSquare, MinusSquare, CheckSquare, Trash2 } from "lucide-react-native";
 import { GroceryItemType } from "../types/grocery-item-type";
+import { dbDeleteGroceryItem } from "../database/db-service";
 
 interface GroceryProps extends GroceryItemType{
     addGroceryQuantity(id: string): void,
@@ -12,7 +13,22 @@ interface GroceryProps extends GroceryItemType{
     isHaveDeleteButton: boolean,
 }
 
-export function TodayGroceryItem({ id, name, detail, groceryImageUri, quantity, date, pricePerItem, totalPricePerItem, isCheck, isHaveDeleteButton, minusGroceryQuantity, addGroceryQuantity, checkGroceryItem, removeGroceryItem }: GroceryProps) {
+export function TodayGroceryItem({ 
+    id, 
+    name, 
+    detail, 
+    groceryImageUri, 
+    quantity, 
+    pricePerItem, 
+    totalPricePerItem, 
+    isCheck, 
+    isHaveDeleteButton, 
+    minusGroceryQuantity, 
+    addGroceryQuantity, 
+    checkGroceryItem, 
+    removeGroceryItem 
+}: GroceryProps) {
+    
     return (
         <HStack
             maxHeight="$56"
@@ -93,7 +109,10 @@ export function TodayGroceryItem({ id, name, detail, groceryImageUri, quantity, 
                     alignItems='center'
                 >
                     <TouchableOpacity
-                        onPress={ () => removeGroceryItem(id) }
+                        onPress={ () => {
+                            dbDeleteGroceryItem(id);
+                            removeGroceryItem(id)
+                        } }
                     >
                         <Icon as={ Trash2 } color="$red600"/>
                     </TouchableOpacity>

@@ -3,10 +3,12 @@ import { GroceryItemType } from '../types/grocery-item-type';
 import { CollectionGroceryType } from '../types/collection-grocery-type';
 import dayjs from 'dayjs';
 import { faker } from '@faker-js/faker';
+import { logger } from '../utils/logger';
 
 const databaseFileName = "grocery-buddy.db";
 const collectionTableName = "CollectionGrocery";
 const groceryTableName = "GroceryItem";
+const db = SQLite.openDatabase(databaseFileName);
 
 // export const getDBConnection = async () => {
 //     return openDatabase({
@@ -17,8 +19,6 @@ const groceryTableName = "GroceryItem";
 
 export const initCreateTable = async (): Promise<void> => {
     try {
-        const db = SQLite.openDatabase(databaseFileName);
-        
         const queryPragmaOn = `PRAGMA foreign_keys = ON;`;
         const queryCreateCollectionTable = `
             CREATE TABLE IF NOT EXISTS ${collectionTableName} (
@@ -58,20 +58,19 @@ export const initCreateTable = async (): Promise<void> => {
         });
         
     } catch (error) {
-        console.error(error);
+        logger.error(error);
     }
 };
 
 
 export const seedDBGrocery = async (): Promise<void> => {
     try {
-        const db = SQLite.openDatabase(databaseFileName);
         // seed collection
         await db.transactionAsync(async tx => {
             for(let i=0; i<5; i++){
                 await tx.executeSqlAsync(`
                     INSERT OR IGNORE INTO ${collectionTableName} (collectionId, name, date, isOnNotification)
-                    VALUES ('defaultCollection-${i}', '${faker.word.words(2)}', '${dayjs(faker.date.anytime())}', 0);
+                    VALUES ('defaultCollection-${i}', '${faker.word.words(2)}', '${dayjs(faker.date.anytime()).format("YYYY-MM-DD")}', 0);
                 `);
             }
         });
@@ -89,14 +88,13 @@ export const seedDBGrocery = async (): Promise<void> => {
         });
         
     } catch (error) {
-        console.error(error);
+        logger.error(error);
     }
 }
 
 
 export const getAllCollection = async (): Promise<Omit<CollectionGroceryType, "listGrocery">[]> => {
     try {
-        const db = SQLite.openDatabase(databaseFileName);
         // PRAGMA table_info(CollectionGrocery)
         // SELECT name FROM sqlite_master WHERE type="table"
         const query = `
@@ -112,14 +110,13 @@ export const getAllCollection = async (): Promise<Omit<CollectionGroceryType, "l
         return resultsDB;
 
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         return [];
     }
 }
 
 export const getAllGroceryItem = async (): Promise<GroceryItemType[]> => {
     try {
-        const db = SQLite.openDatabase(databaseFileName);
         const query = `
             SELECT * from ${groceryTableName}
         `;
@@ -133,7 +130,7 @@ export const getAllGroceryItem = async (): Promise<GroceryItemType[]> => {
         return resultsDB;
 
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         return [];
     }
 }
@@ -142,7 +139,6 @@ export const getAllGroceryItem = async (): Promise<GroceryItemType[]> => {
 // TODO: make get all collection and grocery item with join
 export const getAllCollectionWithGrocery = async (): Promise<CollectionGroceryType[]> => {
     try {
-        const db = SQLite.openDatabase(databaseFileName);
         const query = `
             SELECT
                 CollectionGrocery.collectionId,
@@ -169,7 +165,9 @@ export const getAllCollectionWithGrocery = async (): Promise<CollectionGroceryTy
             LEFT JOIN
                 GroceryItem ON CollectionGrocery.collectionId = GroceryItem.collectionId
             GROUP BY
-                CollectionGrocery.collectionId;
+                CollectionGrocery.collectionId
+            ORDER BY 
+                CollectionGrocery.date ASC;
         `;
         let resultsDB = [];
         await db.transactionAsync(async tx => {
@@ -187,14 +185,51 @@ export const getAllCollectionWithGrocery = async (): Promise<CollectionGroceryTy
         });
 
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         return [];
     }
 }
 
-// TODO: make add db collection
+
+export const dbAddCollection = async ({
+    name,
+    date,
+}: Pick<CollectionGroceryType, "name" | "date">) => {
+    try {
+        const query = `
+            INSERT INTO ${collectionTableName} (collectionId, name, date, isOnNotification)
+            VALUES (?,?,?,?);
+        `;
+        await db.transactionAsync(async tx => {
+            await tx.executeSqlAsync(query, [
+                faker.database.mongodbObjectId(),
+                name,
+                dayjs(date).format("YYYY-MM-DD"),
+                0       
+            ]);
+        });
+
+    } catch (error) {
+        logger.error(error);        
+    }
+}
+
 // TODO: update collection item
 // TODO: delete collection item
+export const dbDeleteCollection = async (collectionId: string) => {
+    try {
+        const query = `
+            DELETE FROM ${collectionTableName}
+            WHERE collectionId='${collectionId}'
+        `;
+        await db.transactionAsync(async tx => {
+            await tx.executeSqlAsync(query, []);
+        });
+
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 
 // TODO: make add db grocery
@@ -210,7 +245,6 @@ export const dbAddGroceryItem = async ({
     isCheck,
 } : GroceryItemType): Promise<void> => {
     try {
-        const db = SQLite.openDatabase(databaseFileName);
         // VALUES ('defaultGroceryItemId-${1}', '${faker.word.words(2)}', '${faker.word.words(10)}', '${faker.image.urlLoremFlickr({ category: 'food' })}', 0, 0.0, 0.0, 0, '${collectionId}');
         const query = `
             INSERT INTO ${groceryTableName} (id, name, detail, groceryImageUri, quantity, pricePerItem, totalPricePerItem, isCheck, collectionId)
@@ -235,5 +269,18 @@ export const dbAddGroceryItem = async ({
         console.error(error);
     }
 }
-// TODO: delete grocery item
-// TODO: delete grocery item
+
+
+export const dbDeleteGroceryItem = async (groceryId: string) => {
+    try {
+        const query = `
+            DELETE FROM ${groceryTableName}
+            WHERE id='${groceryId}';
+        `;
+        await db.transactionAsync(async tx => {
+            await tx.executeSqlAsync(query, []);
+        });
+    } catch (error) {
+        logger.error(error);
+    }
+}

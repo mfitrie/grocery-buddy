@@ -11,6 +11,7 @@ import { RootState } from "../../store/store";
 import { ModalAddGrocery } from "../../components/modal-add-grocery";
 import { removeCollection } from "../../store/grocery";
 import { CollectionRoutes } from "../../constant/route-types";
+import { dbDeleteCollection } from "../../database/db-service";
 
 
 export default function CollectionItem({ route, navigation }){
@@ -106,6 +107,7 @@ export default function CollectionItem({ route, navigation }){
                     gap="$1"
                     action="negative"
                     onPress={ () => {
+                        dbDeleteCollection(collectionId);
                         dispatch(removeCollection({
                             collectionId,
                         }));

@@ -38,6 +38,7 @@ import { faker } from '@faker-js/faker';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { addCollection } from '../../store/grocery';
+import { dbAddCollection } from '../../database/db-service';
 
 export function CollectionsPage({ navigation }){
     const insets = useSafeAreaInsets();
@@ -166,10 +167,17 @@ export function CollectionsPage({ navigation }){
                                             })
                                             return;
                                         }
+
+                                        dbAddCollection({
+                                            name: collectionName,
+                                            date: collectionDate,
+                                        });
+                                        
                                         dispatch(addCollection({
                                             collectionName,
                                             collectionDate,
                                         }));
+                                        
                                         setShowModal(false);
                                         clearInput();
                                         toast.show({

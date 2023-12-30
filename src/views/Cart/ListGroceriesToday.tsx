@@ -81,14 +81,14 @@ export function ListGroceriesToday(){
                                     checkGroceryItem={ () => dispatch(tickCheckGroceryItem({ collectionId: collectionGrocery.collectionId, groceryId: item.id })) }
                                     name={ item.name }
                                     detail={ item.detail }
-                                    groceryImageUri={ item.groceryImageUri }
+                                    groceryImageUri={ item.groceryImageUri ?? "https://placehold.jp/150x150.png" }
                                     quantity={ item.quantity }
                                     pricePerItem={ item.pricePerItem }
                                     totalPricePerItem={ item.totalPricePerItem }
                                     isCheck={ item.isCheck }
                                     isHaveDeleteButton={ false }
                                     key={ index }
-                                />    
+                                />
                             ))
                         }
                     </ScrollView>
