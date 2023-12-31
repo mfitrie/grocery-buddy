@@ -3,7 +3,7 @@ import { Pressable, TouchableOpacity } from "react-native";
 import { Checkbox } from 'react-native-paper';
 import { Pencil, PlusSquare, MinusSquare, CheckSquare, Trash2 } from "lucide-react-native";
 import { GroceryItemType } from "../types/grocery-item-type";
-import { dbDeleteGroceryItem, dbUpdateTickGroceryItem } from "../database/db-service";
+import { dbDeleteGroceryItem, dbUpdateQuantityAndTotalPrice, dbUpdateTickGroceryItem } from "../database/db-service";
 
 interface GroceryProps extends GroceryItemType{
     addGroceryQuantity(id: string): void,
@@ -82,7 +82,14 @@ export function TodayGroceryItem({
                 >
                     <Box>
                         <TouchableOpacity
-                            onPress={() => minusGroceryQuantity(id)}
+                            onPress={() => {
+                                dbUpdateQuantityAndTotalPrice({
+                                    id,
+                                    quantity,
+                                    isAddingQuantity: false,
+                                });
+                                minusGroceryQuantity(id);
+                            }}
                         >
                             <MinusSquare
                                 color='#000'
@@ -92,7 +99,14 @@ export function TodayGroceryItem({
                     <Text size='sm'>{ quantity }</Text>
                     <Box>
                         <TouchableOpacity
-                            onPress={ () => addGroceryQuantity(id) }
+                            onPress={ () => {
+                                dbUpdateQuantityAndTotalPrice({
+                                    id,
+                                    quantity,
+                                    isAddingQuantity: true,
+                                });
+                                addGroceryQuantity(id)
+                            } }
                         >
                             <PlusSquare color='#000' />
                         </TouchableOpacity>
