@@ -3,7 +3,7 @@ import { Pressable, TouchableOpacity } from "react-native";
 import { Checkbox } from 'react-native-paper';
 import { Pencil, PlusSquare, MinusSquare, CheckSquare, Trash2 } from "lucide-react-native";
 import { GroceryItemType } from "../types/grocery-item-type";
-import { dbDeleteGroceryItem } from "../database/db-service";
+import { dbDeleteGroceryItem, dbUpdateTickGroceryItem } from "../database/db-service";
 
 interface GroceryProps extends GroceryItemType{
     addGroceryQuantity(id: string): void,
@@ -28,7 +28,7 @@ export function TodayGroceryItem({
     checkGroceryItem, 
     removeGroceryItem 
 }: GroceryProps) {
-    
+
     return (
         <HStack
             maxHeight="$56"
@@ -127,8 +127,14 @@ export function TodayGroceryItem({
                     <Checkbox
                         bgColor="$blue400"
                         size="md"
-                        status={isCheck ? "checked" : "unchecked"}
-                        onPress={ () => checkGroceryItem(id)}
+                        status={isCheck ? "unchecked" : "checked"}
+                        onPress={ () => {
+                            dbUpdateTickGroceryItem({
+                                id,
+                                isCheck,
+                            });
+                            checkGroceryItem(id);
+                        }}
                         color='#2ecc71'
                     ></Checkbox>
                 </VStack>

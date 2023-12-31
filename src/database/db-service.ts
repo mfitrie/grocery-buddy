@@ -136,7 +136,6 @@ export const getAllGroceryItem = async (): Promise<GroceryItemType[]> => {
 }
 
 
-// TODO: make get all collection and grocery item with join
 export const getAllCollectionWithGrocery = async (): Promise<CollectionGroceryType[]> => {
     try {
         const query = `
@@ -167,7 +166,7 @@ export const getAllCollectionWithGrocery = async (): Promise<CollectionGroceryTy
             GROUP BY
                 CollectionGrocery.collectionId
             ORDER BY 
-                CollectionGrocery.date ASC;
+                CollectionGrocery.date DESC;
         `;
         let resultsDB = [];
         await db.transactionAsync(async tx => {
@@ -215,7 +214,6 @@ export const dbAddCollection = async ({
 }
 
 // TODO: update collection item
-// TODO: delete collection item
 export const dbDeleteCollection = async (collectionId: string) => {
     try {
         const query = `
@@ -232,7 +230,6 @@ export const dbDeleteCollection = async (collectionId: string) => {
 }
 
 
-// TODO: make add db grocery
 export const dbAddGroceryItem = async ({
     collectionId,
     id,
@@ -269,6 +266,31 @@ export const dbAddGroceryItem = async ({
         console.error(error);
     }
 }
+
+
+export const dbUpdateTickGroceryItem = async ({
+    id,
+    isCheck,
+}: Pick<GroceryItemType, "id" | "isCheck">) => {
+    try {
+        const modifyIsCheck = isCheck ? 0 : 1;
+        const query = `
+            UPDATE ${groceryTableName}
+            SET isCheck=${modifyIsCheck}
+            WHERE id='${id}';
+        `;
+
+        db.transactionAsync(async tx => {
+            tx.executeSqlAsync(query);
+        });
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+// TODO: add update quantity with totalprice grocery item
 
 
 export const dbDeleteGroceryItem = async (groceryId: string) => {
