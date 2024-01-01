@@ -28,6 +28,9 @@ interface MinusGroceryItemActionType extends RemoveGroceryItemActionType{}
 interface AddGroceryItemActionType extends RemoveGroceryItemActionType{}
 interface TickCheckGroceryItemActionType extends RemoveGroceryItemActionType{}
 interface TickAllkGroceryItemDoneActionType extends Omit<RemoveGroceryItemActionType, "groceryId">{}
+interface UpdateGroceryItemInfoType extends
+RemoveGroceryItemActionType, 
+Pick<GroceryItemType, "name" | "detail" | "quantity" | "pricePerItem"> {}
 
 // // init dummy listCollectionGroceries
 // const dummyCollectionGrocery: CollectionGroceryType[] = Array(5).fill(null).map(item => {
@@ -217,6 +220,43 @@ const grocerySlice = createSlice({
       }));
        
     },
+    updateGroceryItemInfo(state, action: PayloadAction<UpdateGroceryItemInfoType>){
+      const {
+        collectionId,
+        groceryId,
+        name,
+        detail,
+        quantity,
+        pricePerItem
+      } = action.payload;
+
+      const listGroceryItem = state.listGroceryCollection
+      .find(item => item.collectionId === collectionId)
+      .listGrocery;
+
+      const modifyListGroceryItem =  listGroceryItem.map((item: GroceryItemType) => {
+        if(item.id == groceryId){
+          const totalPricePerItem = pricePerItem * quantity;
+          return {
+            ...item,
+            name,
+            detail,
+            quantity,
+            pricePerItem,
+            totalPricePerItem,
+          }
+        }else {
+          return item;
+        }
+      });
+    
+      state.listGroceryCollection = state.listGroceryCollection
+      .map(item => ({
+        ...item,
+        listGrocery: modifyListGroceryItem,
+      }));
+
+    },
     turnOnNotificationCollection(state, action: PayloadAction<TickAllkGroceryItemDoneActionType>){
       const { collectionId } = action.payload;
       
@@ -307,6 +347,7 @@ export const {
   minusGroceryQuantity,
   tickCheckGroceryItem,
   tickAllGroceryItemAsDone,
+  updateGroceryItemInfo,
   turnOnNotificationCollection,
   turnOffNotificationCollection,
 } = grocerySlice.actions;

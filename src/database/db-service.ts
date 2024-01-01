@@ -10,12 +10,6 @@ const collectionTableName = "CollectionGrocery";
 const groceryTableName = "GroceryItem";
 const db = SQLite.openDatabase(databaseFileName);
 
-// export const getDBConnection = async () => {
-//     return openDatabase({
-//         name: 'grocery-buddy-data.db', 
-//         location: 'default'
-//     });
-// };
 
 export const initCreateTable = async (): Promise<void> => {
     try {
@@ -290,7 +284,6 @@ export const dbUpdateTickGroceryItem = async ({
 }
 
 
-// TODO: add update quantity with totalprice grocery item
 export const dbUpdateQuantityAndTotalPrice = async ({
     id,
     quantity,
@@ -334,6 +327,31 @@ export const dbUpdateQuantityAndTotalPrice = async ({
                 const query = builderQueryUpdateQuantityAndTotalPricePerItemGroceryItem(modifiedQuantity, totalPricePerItem);
                 await tx.executeSqlAsync(query, []);
             }
+        });
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+export const dbUpdateGroceryItemInfo = async ({
+    id,
+    name,
+    detail,
+    quantity,
+    pricePerItem,
+}: Pick<GroceryItemType, "id" | "name" | "detail" | "quantity" | "pricePerItem"> ) => {
+    try {
+        const totalPricePerItem = pricePerItem * quantity;
+        const query = `
+            UPDATE ${groceryTableName}
+            SET name='${name}', detail='${detail}', quantity=${quantity}, pricePerItem=${pricePerItem}, totalPricePerItem=${totalPricePerItem}
+            WHERE id='${id}';
+        `;
+
+        await db.transactionAsync(async tx => {
+            await tx.executeSqlAsync(query, []);
         });
 
     } catch (error) {

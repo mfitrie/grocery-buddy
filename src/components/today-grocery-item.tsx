@@ -10,6 +10,8 @@ interface GroceryProps extends GroceryItemType{
     minusGroceryQuantity(id: string): void,
     checkGroceryItem(id: string): void,
     removeGroceryItem(id: string): void,
+    setShowModalEditGrocery(isShow: boolean): void,
+    setItemEditGrocery(item: Pick<GroceryItemType, "id" | "name" | "detail" | "quantity" | "pricePerItem">): void,
     isHaveDeleteButton: boolean,
 }
 
@@ -17,16 +19,18 @@ export function TodayGroceryItem({
     id, 
     name, 
     detail, 
-    groceryImageUri, 
-    quantity, 
-    pricePerItem, 
+    groceryImageUri,
+    quantity,
+    pricePerItem,
     totalPricePerItem, 
     isCheck, 
-    isHaveDeleteButton, 
+    isHaveDeleteButton,
+    setShowModalEditGrocery,
+    setItemEditGrocery, 
     minusGroceryQuantity, 
     addGroceryQuantity, 
     checkGroceryItem, 
-    removeGroceryItem 
+    removeGroceryItem
 }: GroceryProps) {
 
     return (
@@ -62,7 +66,16 @@ export function TodayGroceryItem({
                     w="$20"
                     size='xs'
                     bg="#e67e22"
-                    onPress={() => { console.log("button pressed") }}
+                    onPress={() => {
+                        setItemEditGrocery({
+                            id,
+                            name,
+                            detail,
+                            quantity,
+                            pricePerItem,
+                        });
+                        setShowModalEditGrocery(true);            
+                    }}
                 >
                     <ButtonText mr="$2">Edit</ButtonText>
                     <ButtonIcon as={Pencil} />

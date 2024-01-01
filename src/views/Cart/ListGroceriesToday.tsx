@@ -33,9 +33,10 @@ import LottieView from 'lottie-react-native';
 import { TodayGroceryItem } from '../../components/today-grocery-item';
 import { GroceryItemType } from '../../types/grocery-item-type';
 import { useDispatch, useSelector } from 'react-redux';
-import { addGroceryItem, addGroceryQuantity, minusGroceryQuantity, tickCheckGroceryItem, tickAllGroceryItemAsDone } from '../../store/grocery';
+import { addGroceryItem, addGroceryQuantity, minusGroceryQuantity, tickCheckGroceryItem, tickAllGroceryItemAsDone, updateGroceryItemInfo } from '../../store/grocery';
 import { RootState } from '../../store/store';
 import { ModalAddGrocery } from '../../components/modal-add-grocery';
+import { dbUpdateGroceryItemInfo } from '../../database/db-service';
 
 
 export function ListGroceriesToday(){
@@ -46,9 +47,22 @@ export function ListGroceriesToday(){
 
     // modal
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [showModalEditGrocery, setShowModalEditGrocery] = useState<boolean>(false);
+    const initValueItemEditGrocery = {
+        id: "",
+        name: "",
+        detail: "",
+        quantity: 0,
+        pricePerItem: 0,
+    }
+    const [itemEditGrocery, setItemEditGrocery] = useState<Pick<GroceryItemType, "id" | "name" | "detail" | "quantity" | "pricePerItem">>(initValueItemEditGrocery);
+    const clearItemEditGrocery = () => {
+        setItemEditGrocery(initValueItemEditGrocery);
+    }
     // modal
 
     const insets = useSafeAreaInsets();
+    const toast = useToast();
 
 
     return (
@@ -59,14 +73,158 @@ export function ListGroceriesToday(){
                 collectionGrocery && collectionGrocery.listGrocery.length !== 0 ? 
                 <>
                     {
-                        <ModalAddGrocery
-                            isShowModal={ showModal }
-                            setShowModal={ setShowModal }
-                            collectionId={ collectionGrocery.collectionId }
-                            collectionName={ collectionGrocery.name }
-                            collectionDate={ collectionGrocery.date }
-                            collectionIsOnNotification={ collectionGrocery.isOnNotification }
-                        />
+                        <>
+                            <ModalAddGrocery
+                                isShowModal={ showModal }
+                                setShowModal={ setShowModal }
+                                collectionId={ collectionGrocery.collectionId }
+                                collectionName={ collectionGrocery.name }
+                                collectionDate={ collectionGrocery.date }
+                                collectionIsOnNotification={ collectionGrocery.isOnNotification }
+                            />
+                            {/*----- modal edit grocery -----*/}
+                            <Modal
+                                isOpen={showModalEditGrocery}
+                                onClose={() => {
+                                    clearItemEditGrocery();
+                                    setShowModalEditGrocery(false);
+                                }}
+                            >
+                                <ModalBackdrop />
+                                <ModalContent>
+                                    <ModalHeader>
+                                        <VStack space="sm">
+                                            <Heading size="lg">Edit grocery information</Heading>
+                                        </VStack>
+                                    </ModalHeader>
+                                    <ModalBody>
+                                        <VStack space='xl'>
+                                            <VStack space='xs'>
+                                                <Text lineHeight="$lg">
+                                                    Grocery Name
+                                                </Text>
+                                                <Input>
+                                                    <InputField
+                                                        type="text" 
+                                                        placeholder='Enter grocery name'
+                                                        value={ itemEditGrocery.name }
+                                                        onChangeText={ (text: string) => {
+                                                            setItemEditGrocery((prevGrocery) => ({
+                                                                ...prevGrocery,
+                                                                name: text,
+                                                            }));
+                                                        } }
+                                                    />
+                                                </Input>
+                                            </VStack>
+                                            <VStack space='xs'>
+                                                <Text lineHeight="$lg">
+                                                    Detail
+                                                </Text>
+                                                <Input>
+                                                    <InputField
+                                                        type="text" 
+                                                        placeholder='Enter detail'
+                                                        value={ itemEditGrocery.detail }
+                                                        onChangeText={ (text: string) => { 
+                                                            setItemEditGrocery((prevGrocery) => ({
+                                                                ...prevGrocery,
+                                                                detail: text,
+                                                            }));
+                                                        } }
+                                                    />
+                                                </Input>
+                                            </VStack>
+                                            <VStack space='xs'>
+                                                <Text lineHeight="$lg">
+                                                    Price Per Item
+                                                </Text>
+                                                <Input>
+                                                    <InputField
+                                                        type="text"
+                                                        keyboardType='numeric'
+                                                        placeholder='Enter price per item'
+                                                        value={ itemEditGrocery.pricePerItem + "" }
+                                                        onChangeText={ (text: string) => { 
+                                                            setItemEditGrocery((prevGrocery) => ({
+                                                                ...prevGrocery,
+                                                                pricePerItem: +text,
+                                                            }));
+                                                        } }
+                                                    />
+                                                </Input>
+                                            </VStack>
+                                            <VStack space='xs'>
+                                                <Text lineHeight="$lg">
+                                                    Quantity
+                                                </Text>
+                                                <Input>
+                                                    <InputField
+                                                        type="text"
+                                                        keyboardType='numeric'
+                                                        placeholder='Enter quantity'
+                                                        value={ itemEditGrocery.quantity + "" }
+                                                        onChangeText={ (text: string) => {
+                                                            setItemEditGrocery((prevGrocery) => ({
+                                                                ...prevGrocery,
+                                                                quantity: +text,
+                                                            }));
+                                                        } }
+                                                    />
+                                                </Input>
+                                            </VStack>
+                                        </VStack>
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <HStack
+                                            gap="$4"
+                                        >
+                                            <Button
+                                                action='positive'
+                                                onPress={ () => {
+                                                        dbUpdateGroceryItemInfo(itemEditGrocery);
+                                                        dispatch(updateGroceryItemInfo({
+                                                            ...itemEditGrocery,
+                                                            groceryId: itemEditGrocery.id,
+                                                            collectionId: collectionGrocery.collectionId,
+                                                        }));
+                                                        clearItemEditGrocery();
+                                                        setShowModalEditGrocery(false);
+                                                        toast.show({
+                                                            placement: "top right",
+                                                            render: ({ id }) => {
+                                                            return (
+                                                                    <Toast nativeID={"toast-" + id} action="info" variant="accent">
+                                                                        <VStack space="xs">
+                                                                            <ToastTitle>Grocery</ToastTitle>
+                                                                            <ToastDescription>
+                                                                                Edit item successful
+                                                                            </ToastDescription>
+                                                                        </VStack>
+                                                                    </Toast>
+                                                                )
+                                                            },
+                                                        });
+                                                    }
+                                                }
+                                            >
+                                                <ButtonText>Save</ButtonText>
+                                            </Button>
+                                            <Button
+                                                action="secondary"
+                                                onPress={ () => {
+                                                    clearItemEditGrocery();
+                                                    setShowModalEditGrocery(false);
+                                                } }
+                                            >
+                                                <ButtonText>Close</ButtonText>
+                                            </Button>
+                                        </HStack>
+                                    </ModalFooter>
+                                </ModalContent>
+                            </Modal>
+                            {/*----- modal edit grocery -----*/}
+                        </>
                     }
 
                     <ScrollView
@@ -76,6 +234,8 @@ export function ListGroceriesToday(){
                             collectionGrocery.listGrocery.map((item, index) => (
                                 <TodayGroceryItem 
                                     id={ item.id }
+                                    setItemEditGrocery={ setItemEditGrocery }
+                                    setShowModalEditGrocery={ setShowModalEditGrocery }
                                     addGroceryQuantity={ () => dispatch(addGroceryQuantity({ collectionId: collectionGrocery.collectionId, groceryId: item.id })) }
                                     minusGroceryQuantity={ () => dispatch(minusGroceryQuantity({ collectionId: collectionGrocery.collectionId, groceryId: item.id })) }
                                     checkGroceryItem={ () => dispatch(tickCheckGroceryItem({ collectionId: collectionGrocery.collectionId, groceryId: item.id })) }
