@@ -169,12 +169,14 @@ export function ModalAddGrocery({
                                         return;
                                     }
 
+                                    const id = faker.database.mongodbObjectId();
+                                    const groceryImageUri = faker.image.urlLoremFlickr({ category: "food" });  
                                     const totalPricePerItem = pricePerItem * quantity;
                                     dbAddGroceryItem({
-                                        id: faker.database.mongodbObjectId(),
+                                        id,
                                         name: groceryName,
                                         detail,
-                                        groceryImageUri: faker.image.urlLoremFlickr({ category: "food" }),
+                                        groceryImageUri,
                                         quantity,
                                         pricePerItem,
                                         totalPricePerItem: totalPricePerItem,
@@ -187,7 +189,9 @@ export function ModalAddGrocery({
                                         collectionName,
                                         collectionDate,
                                         collectionIsOnNotification,
+                                        groceryId: id,
                                         groceryName,
+                                        groceryImageUri,
                                         detail,
                                         quantity,
                                         pricePerItem,

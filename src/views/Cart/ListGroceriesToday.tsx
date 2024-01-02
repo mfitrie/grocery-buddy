@@ -41,7 +41,7 @@ import { dbUpdateGroceryItemInfo } from '../../database/db-service';
 
 export function ListGroceriesToday(){
     const { listGroceryCollection } = useSelector((state: RootState) => state.grocery);
-    const collectionGrocery = listGroceryCollection[0];
+    const collectionGrocery = listGroceryCollection.find(item => item.listGrocery.length !== 0);
     
     const dispatch = useDispatch();
 
@@ -63,6 +63,7 @@ export function ListGroceriesToday(){
 
     const insets = useSafeAreaInsets();
     const toast = useToast();
+
 
 
     return (

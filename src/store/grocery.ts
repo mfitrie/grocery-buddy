@@ -15,7 +15,9 @@ interface AddCollectionType {
   collectionName: string,
   collectionDate: Date,
 }
-interface AddGroceryItemType extends Omit<RemoveGroceryItemActionType, "groceryId">{
+interface AddGroceryItemType extends 
+RemoveGroceryItemActionType,
+Pick<GroceryItemType, "groceryImageUri">{
   collectionName: string,
   collectionDate: Date,
   collectionIsOnNotification: boolean,
@@ -88,6 +90,8 @@ const grocerySlice = createSlice({
         collectionName,
         collectionDate,
         collectionIsOnNotification,
+        groceryId,
+        groceryImageUri,
         groceryName,
         detail,
         quantity,
@@ -100,12 +104,12 @@ const grocerySlice = createSlice({
 
       listGrocery
       .push({
-        id: faker.database.mongodbObjectId(),
+        id: groceryId,
         name: groceryName,
         detail,
         quantity,
         pricePerItem,
-        groceryImageUri: faker.image.urlLoremFlickr({ category: 'food' }),
+        groceryImageUri,
         isCheck: false,
         totalPricePerItem: pricePerItem * quantity,
         collectionId,
