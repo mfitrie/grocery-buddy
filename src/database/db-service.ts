@@ -274,7 +274,7 @@ export const dbUpdateTickGroceryItem = async ({
             WHERE id='${id}';
         `;
 
-        db.transactionAsync(async tx => {
+        await db.transactionAsync(async tx => {
             await tx.executeSqlAsync(query);
         });
 
@@ -287,16 +287,12 @@ export const dbUpdateTickGroceryItem = async ({
 export const dbUpdateQuantityAndTotalPrice = async ({
     id,
     quantity,
+    pricePerItem,
     isAddingQuantity,
-}: Pick<GroceryItemType, "id" | "quantity"> & {
+}: Pick<GroceryItemType, "id" | "quantity" | "pricePerItem"> & {
     isAddingQuantity: boolean
 }) => {
     try {
-        const queryGetPricePerItemAndQuantityGroceryItem = `
-            SELECT pricePerItem, quantity
-            FROM ${groceryTableName}
-            WHERE id='${id}'; 
-        `;
         const builderQueryUpdateQuantityAndTotalPricePerItemGroceryItem = (modifiedQuantity: number, totalPricePerItem: number) => {
             return `
                 UPDATE ${groceryTableName}
@@ -306,26 +302,24 @@ export const dbUpdateQuantityAndTotalPrice = async ({
         }
         
 
-        db.transactionAsync(async tx => {
-            const results =  await tx.executeSqlAsync(queryGetPricePerItemAndQuantityGroceryItem, []);
-            const item: Pick<GroceryItemType, "pricePerItem" | "quantity"> = results.rows[0];
-            const { pricePerItem, quantity } = item;
+        await db.transactionAsync(async tx => {
+            let modifiedQuantity: number;
+
             if(isAddingQuantity){
-                const modifiedQuantity = quantity + 1;
-                const totalPricePerItem = pricePerItem * quantity;
+                modifiedQuantity = quantity + 1;
+                const totalPricePerItem = pricePerItem * modifiedQuantity;
                 const query = builderQueryUpdateQuantityAndTotalPricePerItemGroceryItem(modifiedQuantity, totalPricePerItem);
-                await tx.executeSqlAsync(query, []);
+                await tx.executeSqlAsync(query);
             }
             if(!isAddingQuantity){
-                let modifiedQuantity: number;
-                if(quantity < 0){
+                if(quantity === 0){
                     modifiedQuantity = 0;
                 }else{
                     modifiedQuantity = quantity - 1;
                 }
-                const totalPricePerItem = pricePerItem * quantity;
+                const totalPricePerItem = pricePerItem * modifiedQuantity;
                 const query = builderQueryUpdateQuantityAndTotalPricePerItemGroceryItem(modifiedQuantity, totalPricePerItem);
-                await tx.executeSqlAsync(query, []);
+                await tx.executeSqlAsync(query);
             }
         });
 

@@ -99,6 +99,7 @@ export function TodayGroceryItem({
                                 dbUpdateQuantityAndTotalPrice({
                                     id,
                                     quantity,
+                                    pricePerItem,
                                     isAddingQuantity: false,
                                 });
                                 minusGroceryQuantity(id);
@@ -116,6 +117,7 @@ export function TodayGroceryItem({
                                 dbUpdateQuantityAndTotalPrice({
                                     id,
                                     quantity,
+                                    pricePerItem,
                                     isAddingQuantity: true,
                                 });
                                 addGroceryQuantity(id)
