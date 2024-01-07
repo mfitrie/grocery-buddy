@@ -185,9 +185,10 @@ export const getAllCollectionWithGrocery = async (): Promise<CollectionGroceryTy
 
 
 export const dbAddCollection = async ({
+    collectionId,
     name,
     date,
-}: Pick<CollectionGroceryType, "name" | "date">) => {
+}: Pick<CollectionGroceryType, "collectionId" | "name" | "date">) => {
     try {
         const query = `
             INSERT INTO ${collectionTableName} (collectionId, name, date, isOnNotification)
@@ -195,7 +196,7 @@ export const dbAddCollection = async ({
         `;
         await db.transactionAsync(async tx => {
             await tx.executeSqlAsync(query, [
-                faker.database.mongodbObjectId(),
+                collectionId,
                 name,
                 dayjs(date).format("YYYY-MM-DD"),
                 0       
@@ -253,7 +254,6 @@ export const dbAddGroceryItem = async ({
                 isCheck ? 1 : 0,
                 collectionId,
             ]);
-            console.log("dbAddGroceryItem: ", results.rowsAffected);
         });
 
     } catch (error) {

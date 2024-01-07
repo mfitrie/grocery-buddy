@@ -168,12 +168,15 @@ export function CollectionsPage({ navigation }){
                                             return;
                                         }
 
+                                        const collectionId = faker.database.mongodbObjectId();
                                         dbAddCollection({
+                                            collectionId,
                                             name: collectionName,
                                             date: collectionDate,
                                         });
                                         
                                         dispatch(addCollection({
+                                            collectionId,
                                             collectionName,
                                             collectionDate,
                                         }));

@@ -37,11 +37,15 @@ import { addGroceryItem, addGroceryQuantity, minusGroceryQuantity, tickCheckGroc
 import { RootState } from '../../store/store';
 import { ModalAddGrocery } from '../../components/modal-add-grocery';
 import { dbUpdateGroceryItemInfo } from '../../database/db-service';
+import { CollectionGroceryType } from '../../types/collection-grocery-type';
+import dayjs from 'dayjs';
+import isToday from "dayjs/plugin/isToday";
 
+dayjs.extend(isToday);
 
 export function ListGroceriesToday(){
     const { listGroceryCollection } = useSelector((state: RootState) => state.grocery);
-    const collectionGrocery = listGroceryCollection.find(item => item.listGrocery.length !== 0);
+    const collectionGrocery = listGroceryCollection.find((item: CollectionGroceryType) => dayjs(item.date).isToday() );
     
     const dispatch = useDispatch();
 

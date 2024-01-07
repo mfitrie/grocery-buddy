@@ -16,7 +16,7 @@ export default function HomeStackScreen(){
     useEffect(() => {
         (async () => {
           await initCreateTable();
-          await seedDBGrocery();
+        //   await seedDBGrocery();
           const collections = await getAllCollection();
           const groceries = await getAllGroceryItem();
           const collectionWithGrocery = await getAllCollectionWithGrocery();

@@ -71,10 +71,10 @@ const grocerySlice = createSlice({
     initGroceryCollection: (state, action) => {
       state.listGroceryCollection = action.payload;
     },
-    addCollection: (state, action: PayloadAction<AddCollectionType>) => {
-      const { collectionName, collectionDate } = action.payload;
+    addCollection: (state, action: PayloadAction<AddCollectionType & Pick<RemoveCollectionType, "collectionId">>) => {
+      const { collectionId, collectionName, collectionDate } = action.payload;
       const newCollection: CollectionGroceryType  = {
-        collectionId: faker.database.mongodbObjectId(),
+        collectionId,
         name: collectionName,
         date: collectionDate,
         isOnNotification: false,

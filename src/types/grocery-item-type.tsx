@@ -5,7 +5,7 @@ export interface GroceryItemType{
     groceryImageUri: string,
     quantity: number,
     pricePerItem: number,
-    totalPricePerItem: number
+    totalPricePerItem: number,
     isCheck: boolean,
     collectionId: string,
 }
